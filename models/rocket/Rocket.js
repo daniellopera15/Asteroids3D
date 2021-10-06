@@ -56,19 +56,40 @@ class Rocket {
         noseCone.add(noseMesh);
 
         //Thrusters
+        const thrusterLeft = this.createThrusters();
+        const thrusterRight = this.createThrusters();
+        thrusterLeft.position.z = -0.3;
+        thrusterRight.position.z = 0.3;
+        baseMesh.add(thrusterLeft);
+        baseMesh.add(thrusterRight);
+
+        const wingRight = this.createWings();
+        const wingLeft = this.createWings();
+        wingRight.position.set(-0.25,0,0.8);
+        wingLeft.position.set(-0.25,0,-0.8);
+        baseMesh.add(wingLeft);
+        baseMesh.add(wingRight);
+
+        return rocket;
+
+    }
+
+    createThrusters() {
+
         const thrusterGeometry = new THREE.CylinderGeometry(0.3, 0.1, 0.4, 19);
         const thrusterMaterial = new THREE.MeshPhongMaterial({color: 'black'});
-        const thrusterLefMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
-        const thrusterRigthMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
-        thrusterLefMesh.position.set(-0.7,0,-0.3); thrusterLefMesh.rotateZ(Math.PI / 2);
-        thrusterRigthMesh.position.set(-0.7,0,0.3); thrusterRigthMesh.rotateZ(Math.PI / 2);
-        baseMesh.add(thrusterLefMesh);
-        baseMesh.add(thrusterRigthMesh);
+        const thrusterMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
+        thrusterMesh.rotateZ(Math.PI / 2);
+        thrusterMesh.position.x = -0.7;
+
+        return thrusterMesh;
+
+    }
+
+    createWings() {
 
         //Wings
         const wing = new THREE.Object3D();
-        wing.position.set(-0.25,0,0.8);
-        baseMesh.add(wing);
 
         //Wing - base
         const wingBaseGeometry = new THREE.BoxGeometry(0.5,0.6,0.6);
@@ -96,8 +117,7 @@ class Rocket {
         noseTurbineMesh.rotateZ(Math.PI / 2);
         turbine.add(noseTurbineMesh);
 
-
-        return rocket;
+        return wing;
 
     }
 
