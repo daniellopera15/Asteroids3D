@@ -1,0 +1,110 @@
+import * as THREE from '../../libs/three.module.js';
+
+class Rocket {
+
+    constructor(game) {
+
+        this.game = game;
+        this.rocket = this.load();
+
+    }
+
+    load() {
+
+        const rocket = new THREE.Object3D();
+        this.game.scene.add(rocket);
+
+        //Base
+        const baseGeometry = new THREE.BoxGeometry();
+        const baseMaterial = new THREE.MeshPhongMaterial({color: 'red'});
+        const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+        rocket.add(baseMesh);
+
+        //Cockpit
+        const cockpitGeometry = new THREE.SphereGeometry(0.4, 17, 14);
+        const cockpitMaterial = new THREE.MeshPhongMaterial({color: 'blue'});
+        const cockpitMesh = new THREE.Mesh(cockpitGeometry, cockpitMaterial);
+        cockpitMesh.position.set(0,0.45,0);
+        baseMesh.add(cockpitMesh);
+
+        //NoseCone
+        const noseCone = new THREE.Object3D();
+        noseCone.rotateX(Math.PI / 4);
+        baseMesh.add(noseCone);
+
+        //NoseCone - Base
+        const baseNoseGeometry = new THREE.BoxGeometry(0.7, 0.7, 0.7);
+        const baseNoseMaterial = new THREE.MeshPhongMaterial({color: 'red'});
+        const baseNoseMesh = new THREE.Mesh(baseNoseGeometry, baseNoseMaterial);
+        baseNoseMesh.position.set(0.5,0,0);
+        noseCone.add(baseNoseMesh);
+
+        //NoseCone - Body
+        const bodyNoseGeometry = new THREE.BoxGeometry(0.3, 0.7, 0.7);
+        const bodyNoseMaterial = new THREE.MeshPhongMaterial({color: 'yellow'});
+        const bodyNoseMesh = new THREE.Mesh(bodyNoseGeometry, bodyNoseMaterial);
+        bodyNoseMesh.position.set(1,0,0);
+        noseCone.add(bodyNoseMesh);
+
+        //NoseCone - Nose
+        const noseGeometry = new THREE.CylinderGeometry(0, 0.5, 0.8, 4);
+        const noseMaterial = new THREE.MeshPhongMaterial({color: 'red'});
+        const noseMesh = new THREE.Mesh(noseGeometry, noseMaterial);
+        noseMesh.position.set(1.55,0,0);
+        noseMesh.rotateX(-(Math.PI / 4));
+        noseMesh.rotateZ((3 * Math.PI) / 2);
+        noseCone.add(noseMesh);
+
+        //Thrusters
+        const thrusterGeometry = new THREE.CylinderGeometry(0.3, 0.1, 0.4, 19);
+        const thrusterMaterial = new THREE.MeshPhongMaterial({color: 'black'});
+        const thrusterLefMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
+        const thrusterRigthMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
+        thrusterLefMesh.position.set(-0.7,0,-0.3); thrusterLefMesh.rotateZ(Math.PI / 2);
+        thrusterRigthMesh.position.set(-0.7,0,0.3); thrusterRigthMesh.rotateZ(Math.PI / 2);
+        baseMesh.add(thrusterLefMesh);
+        baseMesh.add(thrusterRigthMesh);
+
+        //Wings
+        const wing = new THREE.Object3D();
+        wing.position.set(-0.25,0,0.8);
+        baseMesh.add(wing);
+
+        //Wing - base
+        const wingBaseGeometry = new THREE.BoxGeometry(0.5,0.6,0.6);
+        const wingBaseMaterial = new THREE.MeshPhongMaterial({color: 'orange'});
+        const wingBaseMesh = new THREE.Mesh(wingBaseGeometry, wingBaseMaterial);
+        wing.add(wingBaseMesh);
+
+        //Wing - Turbine
+        const turbine = new THREE.Object3D();
+        turbine.position.x = 0.7;
+        turbine.position.z = 0.04;
+        wingBaseMesh.add(turbine);
+
+        const turbineGeometry = new THREE.CylinderGeometry(0.2, 0.2, 1, 16);
+        const turbineMaterial = new THREE.MeshPhongMaterial({color: 'yellow'});
+        const turbineMesh = new THREE.Mesh(turbineGeometry, turbineMaterial);
+        turbineMesh.rotateZ(Math.PI / 2);
+        turbine.add(turbineMesh);
+
+        //Wing - Turbine - Nose
+        const noseTurbineGeometry = new THREE.CylinderGeometry(0.2, 0.1, 0.3, 16);
+        const noseTurbineMaterial = new THREE.MeshPhongMaterial({color: 'orange'});
+        const noseTurbineMesh = new THREE.Mesh(noseTurbineGeometry, noseTurbineMaterial);
+        noseTurbineMesh.position.x = 0.65;
+        noseTurbineMesh.rotateZ(Math.PI / 2);
+        turbine.add(noseTurbineMesh);
+
+
+        return rocket;
+
+    }
+
+    rotate() {
+        this.rocket.rotateY(0.01);
+    }
+
+}
+
+export { Rocket };
