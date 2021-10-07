@@ -1,4 +1,5 @@
 import * as THREE from '../../libs/three.module.js';
+import { Vector2 } from '../../libs/three.module.js';
 
 class Rocket {
 
@@ -6,6 +7,16 @@ class Rocket {
 
         this.game = game;
         this.rocket = this.load();
+        this.rocket.rotateZ(Math.PI / 2); this.rocket.rotateX(Math.PI / 2);
+        
+        this.velocity = new Vector2(0,0);
+        this.speedUp = false;
+        this.rotateLeft = false;
+        this.rotateRight = false;
+
+        //Controls
+        document.addEventListener('keyup', this.keyUp.bind(this));
+        document.addEventListener('keydown', this.keyDown.bind(this));
 
     }
 
@@ -118,6 +129,89 @@ class Rocket {
         turbine.add(noseTurbineMesh);
 
         return wing;
+
+    }
+
+    keyUp(evt) {
+        switch(evt.keyCode) {
+            //Forward
+            case 87:
+            case 38:
+                this.speedUp = false;
+                break;
+            //Left
+            case 65:
+            case 37:
+                this.rotateLeft = false;
+                break;
+            //Right
+            case 68:
+            case 39:
+                this.rotateRight = false;
+                break;
+            
+        }
+    }
+
+    keyDown(evt) {
+        switch(evt.keyCode) {
+            //Forward
+            case 87:
+            case 38:
+                this.speedUp = true;
+                break;
+            //Left
+            case 65:
+            case 37:
+                this.rotateLeft = true;
+                break;
+            //Right
+            case 68:
+            case 39:
+                this.rotateRight = true;
+                break;
+        }
+    }
+
+    update(time){
+
+        if (this.speedUp) {
+            if (this.velocity.x < 0.3) {
+                this.velocity.x += 0.003;
+            }  
+        } else {
+            if (this.velocity.x > 0) {
+                this.velocity.x -= 0.004;
+            }  
+        }
+
+        if(this.rotateRight || this.rotateLeft) {
+            if (this.rotateRight) {
+                if (this.velocity.y > -0.07) {
+                    this.velocity.y -= 0.005;
+                } 
+            } else {
+                if (this.velocity.y < 0.07) {
+                    this.velocity.y += 0.005;
+                } 
+            }
+            
+        } else {
+            if (this.velocity.y > 0) {
+                this.velocity.y -= 0.003;
+                if (this.velocity.y <= 0) {
+                    this.velocity.y = 0;
+                }
+            } else if (this.velocity.y < 0) {
+                this.velocity.y += 0.003;
+                if (this.velocity.y >= 0) {
+                    this.velocity.y = 0;
+                }
+            }
+        }
+
+        this.rocket.translateX(this.velocity.x);
+        this.rocket.rotateY(this.velocity.y);
 
     }
 

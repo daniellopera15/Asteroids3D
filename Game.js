@@ -7,8 +7,10 @@ class Game {
         const container = document.createElement('div');
         document.body.appendChild(container);
 
+        this.clock = new THREE.Clock();
+
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
-        this.camera.position.set(0,0,4);
+        this.camera.position.set(0,0,28);
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color( 0xAAAAAA );
@@ -32,7 +34,7 @@ class Game {
         this.rocket = new Rocket(this);
 
         //Control de camara provisional
-        const controls = new OrbitControls(this.camera, this.renderer.domElement);
+        //const controls = new OrbitControls(this.camera, this.renderer.domElement);
 
         window.addEventListener('resize', this.resize.bind(this));
     }
@@ -44,7 +46,9 @@ class Game {
     }
 
     render() {   
-        this.rocket.rotate();
+        //this.rocket.rotate();
+        const time = this.clock.getElapsedTime();
+        this.rocket.update(time);
         this.renderer.render( this.scene, this.camera );
     }
 
