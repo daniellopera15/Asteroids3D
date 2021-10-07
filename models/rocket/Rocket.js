@@ -88,7 +88,7 @@ class Rocket {
     createThrusters() {
 
         const thrusterGeometry = new THREE.CylinderGeometry(0.3, 0.1, 0.4, 19);
-        const thrusterMaterial = new THREE.MeshPhongMaterial({color: 'black'});
+        const thrusterMaterial = new THREE.MeshPhongMaterial({color: 'gray'});
         const thrusterMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
         thrusterMesh.rotateZ(Math.PI / 2);
         thrusterMesh.position.x = -0.7;
@@ -182,6 +182,9 @@ class Rocket {
         } else {
             if (this.velocity.x > 0) {
                 this.velocity.x -= 0.004;
+                if (this.velocity.x <= 0) {
+                    this.velocity.x = 0;
+                }
             }  
         }
 
@@ -213,10 +216,6 @@ class Rocket {
         this.rocket.translateX(this.velocity.x);
         this.rocket.rotateY(this.velocity.y);
 
-    }
-
-    rotate() {
-        this.rocket.rotateY(0.01);
     }
 
 }
