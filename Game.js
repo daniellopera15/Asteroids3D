@@ -13,7 +13,7 @@ class Game {
         this.camera.position.set(0,0,28);
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color( 0xAAAAAA );
+        this.scene.background = new THREE.TextureLoader().load('./background/space.png', function(texture) {});
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -33,9 +33,6 @@ class Game {
         //Creacion de la nave
         this.rocket = new Rocket(this);
 
-        //Control de camara provisional
-        //const controls = new OrbitControls(this.camera, this.renderer.domElement);
-
         window.addEventListener('resize', this.resize.bind(this));
     }
 
@@ -46,7 +43,6 @@ class Game {
     }
 
     render() {   
-        //this.rocket.rotate();
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
         this.renderer.render( this.scene, this.camera );
