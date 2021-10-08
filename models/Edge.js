@@ -19,18 +19,18 @@ class Edge {
 
         switch(this.type) {
             case EdgeType.UP:
+                this.line.position.x = 10;
+                break;
+            case EdgeType.LEFT:
                 this.line.position.z = -10;
                 this.line.rotateY(Math.PI / 2);
                 break;
-            case EdgeType.LEFT:
-                this.line.position.x = -10;
-                break;
             case EdgeType.RIGHT:
-                this.line.position.x = 10;
-                break;
-            case EdgeType.DOWN:
                 this.line.position.z = 10;
                 this.line.rotateY(Math.PI / 2);
+                break;
+            case EdgeType.DOWN:
+                this.line.position.x = -10;
                 break;
         }
 
@@ -42,23 +42,23 @@ class Edge {
 
         switch(this.type) {
             case EdgeType.UP:
-                if (this.line.position.z - obj.position.z >= 0) {
-                    obj.position.z = obj.position.z * -1 - 0.2;
+                if (this.line.position.x - obj.position.x <= 0) {
+                   obj.position.x = obj.position.x * -1 + 0.2;
                 }
                 break;
             case EdgeType.DOWN:
-                if (this.line.position.z - obj.position.z <= 0) {
-                    obj.position.z = obj.position.z * -1 + 0.2;
-                }
-                break;
-            case EdgeType.LEFT:
                 if (this.line.position.x - obj.position.x >= 0) {
                     obj.position.x = obj.position.x * -1 - 0.2;
                 }
                 break;
+            case EdgeType.LEFT:
+                if (this.line.position.z - obj.position.z >= 0) {
+                    obj.position.z = obj.position.z * -1 - 0.2;
+                }
+                break;
             case EdgeType.RIGHT:
-                if (this.line.position.x - obj.position.x <= 0) {
-                   obj.position.x = obj.position.x * -1 + 0.2;
+                if (this.line.position.z - obj.position.z <= 0) {
+                    obj.position.z = obj.position.z * -1 + 0.2;
                 }
                 break;
         }

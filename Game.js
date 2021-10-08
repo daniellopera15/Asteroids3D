@@ -33,7 +33,7 @@ class Game {
         this.scene.add(light);
 
         //Controles para testear
-        const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        //const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
         //Creacion de la nave
         this.rocket = new Rocket(this);
