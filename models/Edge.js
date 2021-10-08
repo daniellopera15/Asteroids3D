@@ -19,18 +19,18 @@ class Edge {
 
         switch(this.type) {
             case EdgeType.UP:
-                this.line.position.x = 10;
+                this.line.position.x = 20;
                 break;
             case EdgeType.LEFT:
-                this.line.position.z = -10;
+                this.line.position.z = -38;
                 this.line.rotateY(Math.PI / 2);
                 break;
             case EdgeType.RIGHT:
-                this.line.position.z = 10;
+                this.line.position.z = 38;
                 this.line.rotateY(Math.PI / 2);
                 break;
             case EdgeType.DOWN:
-                this.line.position.x = -10;
+                this.line.position.x = -20;
                 break;
         }
 
@@ -42,23 +42,23 @@ class Edge {
 
         switch(this.type) {
             case EdgeType.UP:
-                if (this.line.position.x - obj.position.x <= 0) {
+                if (this.line.position.x - obj.position.x <= 2.6) {
                    obj.position.x = obj.position.x * -1 + 0.2;
                 }
                 break;
             case EdgeType.DOWN:
-                if (this.line.position.x - obj.position.x >= 0) {
+                if (this.line.position.x - obj.position.x >= -2.6) {
                     obj.position.x = obj.position.x * -1 - 0.2;
                 }
                 break;
             case EdgeType.LEFT:
-                if (this.line.position.z - obj.position.z >= 0) {
-                    obj.position.z = obj.position.z * -1 - 0.2;
+                if (this.line.position.z - obj.position.z >= -4.8) {
+                    obj.position.z = obj.position.z * -1 - 0.4;
                 }
                 break;
             case EdgeType.RIGHT:
-                if (this.line.position.z - obj.position.z <= 0) {
-                    obj.position.z = obj.position.z * -1 + 0.2;
+                if (this.line.position.z - obj.position.z <= 4.8) {
+                    obj.position.z = obj.position.z * -1 + 0.4;
                 }
                 break;
         }
