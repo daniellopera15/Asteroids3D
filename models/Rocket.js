@@ -7,7 +7,6 @@ class Rocket {
 
         this.game = game;
         this.rocket = this.load();
-        this.rocket.rotateZ(Math.PI / 2); this.rocket.rotateX(Math.PI / 2);
         
         this.velocity = new Vector2(0,0);
         this.speedUp = false;
@@ -170,10 +169,27 @@ class Rocket {
             case 39:
                 this.rotateRight = true;
                 break;
+            //Prueba
+            case 75:
+                this.ubicacion();
+                break;
+            //Prueba2
+            case 76:
+                this.saltar();
+                break;
         }
     }
 
-    update(time){
+    saltar() {
+        const target = new THREE.Vector3(); 
+        this.rocket.position.x = this.rocket.position.x * -1;
+    }
+
+    getObject() {
+        return this.rocket;
+    }
+
+    update(time) {
 
         if (this.speedUp) {
             if (this.velocity.x < 0.3) {
@@ -216,6 +232,12 @@ class Rocket {
         this.rocket.translateX(this.velocity.x);
         this.rocket.rotateY(this.velocity.y);
 
+    }
+
+    ubicacion() {
+        const target = new THREE.Vector3(); 
+        this.rocket.getWorldPosition(target);
+        console.log(this.rocket.position);
     }
 
 }
