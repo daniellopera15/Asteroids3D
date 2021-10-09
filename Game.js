@@ -38,6 +38,9 @@ class Game {
         //Creacion de la nave
         this.rocket = new Rocket(this);
 
+        //Balas
+        this.bullets = [];
+
         //Creación de los bordes
         this.edgeUp = new Edge(this, EdgeType.UP);
         this.edgeLeft = new Edge(this, EdgeType.LEFT);
@@ -46,8 +49,6 @@ class Game {
 
         window.addEventListener('resize', this.resize.bind(this));
 
-        console.log(window.innerWidth);
-        console.log(window.innerHeight);
     }
 
     resize() {
@@ -59,11 +60,20 @@ class Game {
     render() {   
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
-        this.edgeUp.update(this.rocket.getObject());
-        this.edgeLeft.update(this.rocket.getObject());
-        this.edgeRight.update(this.rocket.getObject());
-        this.edgeDown.update(this.rocket.getObject());
+        this.bullets = this.bullets.filter(bullet => bullet.exist);
+        this.bullets.forEach(bullet => { 
+            bullet.update(); 
+            this.edgesListener(bullet.getObject())
+        });
+        this.edgesListener(this.rocket.getObject());
         this.renderer.render( this.scene, this.camera );
+    }
+
+    edgesListener(obj) {
+        this.edgeUp.update(obj);
+        this.edgeLeft.update(obj);
+        this.edgeRight.update(obj);
+        this.edgeDown.update(obj);
     }
 
 }

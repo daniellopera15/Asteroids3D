@@ -1,4 +1,5 @@
 import * as THREE from '../../libs/three.module.js';
+import { Bullet } from './Bullet.js';
 import { Vector2 } from '../../libs/three.module.js';
 
 class Rocket {
@@ -9,6 +10,8 @@ class Rocket {
         this.rocket = this.load();
         
         this.velocity = new Vector2(0,0);
+        this.rocket.distanceEdgeX = 0.2;
+        this.rocket.distanceEdgeZ = 0.4;
         this.speedUp = false;
         this.rotateLeft = false;
         this.rotateRight = false;
@@ -169,20 +172,11 @@ class Rocket {
             case 39:
                 this.rotateRight = true;
                 break;
-            //Prueba
-            case 75:
-                this.ubicacion();
-                break;
-            //Prueba2
-            case 76:
-                this.saltar();
+            //Shoot
+            case 32:
+                this.shoot();
                 break;
         }
-    }
-
-    saltar() {
-        const target = new THREE.Vector3(); 
-        this.rocket.position.x = this.rocket.position.x * -1;
     }
 
     getObject() {
@@ -234,10 +228,9 @@ class Rocket {
 
     }
 
-    ubicacion() {
-        const target = new THREE.Vector3(); 
-        this.rocket.getWorldPosition(target);
-        console.log(this.rocket.position);
+    shoot() {
+        const bullet = new Bullet(this.game, this.rocket);
+        this.game.bullets.push(bullet);
     }
 
 }
