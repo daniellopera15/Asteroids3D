@@ -6,13 +6,19 @@ class Bullet {
 
         this.bullet = new THREE.Object3D(); 
         this.bullet.position.copy(rocket.position);
-        this.bullet.quaternion.copy(rocket.quaternion); 
+        this.bullet.quaternion.copy(rocket.quaternion);
+        this.bullet.rotateZ(3 * Math.PI / 2);  
+        this.bullet.translateY(2);
+        this.bullet.distanceEdgeX = 1;
+        this.bullet.distanceEdgeZ = 1;
         this.velocity = 0;
-        this.bullet.rotateZ(3 * Math.PI / 2);        
+        this.limitDistance = 30;
+        this.exist = true;
+            
+        this.game = game;
+        this.game.scene.add(this.bullet);
 
-        game.scene.add(this.bullet);
-
-        const bulletGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2, 8);
+        const bulletGeometry = new THREE.CylinderGeometry(0.2, 0.2, 1.5, 8);
         const bulletMaterial = new THREE.MeshPhongMaterial({color: 'red'});
         const bulletMesh = new THREE.Mesh(bulletGeometry, bulletMaterial);
 
@@ -20,15 +26,20 @@ class Bullet {
 
     }
 
-    shoot(pos) {
+    getObject() {
+        return this.bullet;
+    }
 
-        var limitDistance = 1;
+    update() {
 
         //Mientras aún tenga recorrido y no haya impactado con un asteroide
-        while(limitDistance >= 0) {
-            this.velocity += 0.1;
+        if(this.limitDistance >= 0) {
+            this.velocity += 0.07;
             this.bullet.translateY(this.velocity);
-            limitDistance -= 0.1;
+            this.limitDistance -= 1;
+        } else {
+            this.game.scene.remove(this.bullet);
+            this.exist = false;
         }
 
     }

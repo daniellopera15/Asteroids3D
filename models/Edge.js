@@ -40,25 +40,27 @@ class Edge {
 
     update(obj) {
 
+        console.log(obj.distanceEdgeX);
+
         switch(this.type) {
             case EdgeType.UP:
                 if (this.line.position.x - obj.position.x <= 2.6) {
-                   obj.position.x = obj.position.x * -1 + 0.2;
+                   obj.position.x = obj.position.x * -1 + obj.distanceEdgeX;
                 }
                 break;
             case EdgeType.DOWN:
                 if (this.line.position.x - obj.position.x >= -2.6) {
-                    obj.position.x = obj.position.x * -1 - 0.2;
+                    obj.position.x = obj.position.x * -1 - obj.distanceEdgeX;
                 }
                 break;
             case EdgeType.LEFT:
                 if (this.line.position.z - obj.position.z >= -4.8) {
-                    obj.position.z = obj.position.z * -1 - 0.4;
+                    obj.position.z = obj.position.z * -1 - obj.distanceEdgeZ;
                 }
                 break;
             case EdgeType.RIGHT:
                 if (this.line.position.z - obj.position.z <= 4.8) {
-                    obj.position.z = obj.position.z * -1 + 0.4;
+                    obj.position.z = obj.position.z * -1 + obj.distanceEdgeZ;
                 }
                 break;
         }

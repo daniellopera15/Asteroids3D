@@ -10,6 +10,8 @@ class Rocket {
         this.rocket = this.load();
         
         this.velocity = new Vector2(0,0);
+        this.rocket.distanceEdgeX = 0.2;
+        this.rocket.distanceEdgeZ = 0.4;
         this.speedUp = false;
         this.rotateLeft = false;
         this.rotateRight = false;
@@ -228,9 +230,7 @@ class Rocket {
 
     shoot() {
         const bullet = new Bullet(this.game, this.rocket);
-        console.log(bullet);
-        console.log(this.rocket);
-        bullet.shoot();
+        this.game.bullets.push(bullet);
     }
 
 }
