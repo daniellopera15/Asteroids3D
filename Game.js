@@ -46,8 +46,6 @@ class Game {
 
         window.addEventListener('resize', this.resize.bind(this));
 
-        console.log(window.innerWidth);
-        console.log(window.innerHeight);
     }
 
     resize() {
