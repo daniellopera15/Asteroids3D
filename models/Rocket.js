@@ -186,12 +186,12 @@ class Rocket {
     update(time) {
 
         if (this.speedUp) {
-            if (this.velocity.x < 0.3) {
-                this.velocity.x += 0.003;
+            if (this.velocity.x < 14.5) {
+                this.velocity.x += 0.3;
             }  
         } else {
             if (this.velocity.x > 0) {
-                this.velocity.x -= 0.004;
+                this.velocity.x -= 0.2;
                 if (this.velocity.x <= 0) {
                     this.velocity.x = 0;
                 }
@@ -200,31 +200,30 @@ class Rocket {
 
         if(this.rotateRight || this.rotateLeft) {
             if (this.rotateRight) {
-                if (this.velocity.y > -0.07) {
-                    this.velocity.y -= 0.005;
+                if (this.velocity.y > -3.5) {
+                    this.velocity.y -= 0.5;
                 } 
             } else {
-                if (this.velocity.y < 0.07) {
-                    this.velocity.y += 0.005;
+                if (this.velocity.y < 3.5) {
+                    this.velocity.y += 0.5;
                 } 
             }
-            
         } else {
             if (this.velocity.y > 0) {
-                this.velocity.y -= 0.003;
+                this.velocity.y -= 0.4;
                 if (this.velocity.y <= 0) {
                     this.velocity.y = 0;
                 }
             } else if (this.velocity.y < 0) {
-                this.velocity.y += 0.003;
+                this.velocity.y += 0.4;
                 if (this.velocity.y >= 0) {
                     this.velocity.y = 0;
                 }
             }
         }
 
-        this.rocket.translateX(this.velocity.x);
-        this.rocket.rotateY(this.velocity.y);
+        this.rocket.translateX(this.velocity.x * this.game.delta);
+        this.rocket.rotateY(this.velocity.y * this.game.delta);
 
     }
 
