@@ -10,8 +10,8 @@ class Game {
 
         this.clock = new THREE.Clock();
         this.delta = 0;
-        // 60 fps
-        this.interval = 1 / 60;
+        // 120 fps
+        this.interval = 1 / 120;
 
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
         this.camera.position.set(0,28,0);
