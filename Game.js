@@ -9,6 +9,9 @@ class Game {
         document.body.appendChild(container);
 
         this.clock = new THREE.Clock();
+        this.delta = 0;
+        // 60 fps
+        this.interval = 1 / 60;
 
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
         this.camera.position.set(0,28,0);
@@ -22,7 +25,8 @@ class Game {
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		container.appendChild( this.renderer.domElement );
 
-        this.renderer.setAnimationLoop(this.render.bind(this));
+        //this.renderer.setAnimationLoop(this.render.bind(this));
+        window.requestAnimationFrame(this.render.bind(this));
 
         //Iluminación
         const ambient = new THREE.HemisphereLight(0xFFFFFF, 0xBBBBFF, 0.3);
@@ -58,6 +62,9 @@ class Game {
     }
 
     render() {   
+        window.requestAnimationFrame(this.render.bind(this));
+        this.delta += this.clock.getDelta();
+
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
         this.bullets = this.bullets.filter(bullet => bullet.exist);
@@ -66,7 +73,11 @@ class Game {
             this.edgesListener(bullet.getObject())
         });
         this.edgesListener(this.rocket.getObject());
-        this.renderer.render( this.scene, this.camera );
+       
+        if (this.delta > this.interval) {
+            this.renderer.render( this.scene, this.camera );
+            this.delta = this.delta % this.interval;
+        }
     }
 
     edgesListener(obj) {

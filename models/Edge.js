@@ -40,8 +40,6 @@ class Edge {
 
     update(obj) {
 
-        console.log(obj.distanceEdgeX);
-
         switch(this.type) {
             case EdgeType.UP:
                 if (this.line.position.x - obj.position.x <= 2.6) {
