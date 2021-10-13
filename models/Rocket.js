@@ -12,6 +12,7 @@ class Rocket {
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
+        this.gunCharged = true;
         this.speedUp = false;
         this.rotateLeft = false;
         this.rotateRight = false;
@@ -151,6 +152,10 @@ class Rocket {
             case 39:
                 this.rotateRight = false;
                 break;
+            //Shoot
+            case 32:
+                this.gunCharged = true;
+                break;
             
         }
     }
@@ -230,6 +235,7 @@ class Rocket {
     shoot() {
         const bullet = new Bullet(this.game, this.rocket);
         this.game.bullets.push(bullet);
+        this.gunCharged = false;
     }
 
 }
