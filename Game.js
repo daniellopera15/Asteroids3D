@@ -1,6 +1,7 @@
 import * as THREE from './libs/three.module.js';
 import { OrbitControls } from './libs/OrbitControls.js';
 import { Rocket } from './models/Rocket.js';
+import { Asteroid } from './models/Asteroid.js';
 import { Edge, EdgeType } from './models/Edge.js';
 
 class Game {
@@ -42,6 +43,9 @@ class Game {
         //Creacion de la nave
         this.rocket = new Rocket(this);
 
+        //Creacion de un asteroide
+        this.asteroid = new Asteroid(this);
+
         //Balas
         this.bullets = [];
 
@@ -67,6 +71,7 @@ class Game {
 
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
+        this.asteroid.update();
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
