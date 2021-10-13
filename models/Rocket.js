@@ -1,4 +1,5 @@
 import * as THREE from '../../libs/three.module.js';
+import { Bullet } from './Bullet.js';
 import { Vector2 } from '../../libs/three.module.js';
 
 class Rocket {
@@ -9,6 +10,9 @@ class Rocket {
         this.rocket = this.load();
         
         this.velocity = new Vector2(0,0);
+        this.rocket.distanceEdgeX = 0.3;
+        this.rocket.distanceEdgeZ = 0.5;
+        this.gunCharged = true;
         this.speedUp = false;
         this.rotateLeft = false;
         this.rotateRight = false;
@@ -148,6 +152,10 @@ class Rocket {
             case 39:
                 this.rotateRight = false;
                 break;
+            //Shoot
+            case 32:
+                this.gunCharged = true;
+                break;
             
         }
     }
@@ -169,20 +177,11 @@ class Rocket {
             case 39:
                 this.rotateRight = true;
                 break;
-            //Prueba
-            case 75:
-                this.ubicacion();
-                break;
-            //Prueba2
-            case 76:
-                this.saltar();
+            //Shoot
+            case 32:
+                this.shoot();
                 break;
         }
-    }
-
-    saltar() {
-        const target = new THREE.Vector3(); 
-        this.rocket.position.x = this.rocket.position.x * -1;
     }
 
     getObject() {
@@ -192,12 +191,12 @@ class Rocket {
     update(time) {
 
         if (this.speedUp) {
-            if (this.velocity.x < 0.3) {
-                this.velocity.x += 0.003;
+            if (this.velocity.x < 14.5) {
+                this.velocity.x += 0.3;
             }  
         } else {
             if (this.velocity.x > 0) {
-                this.velocity.x -= 0.004;
+                this.velocity.x -= 0.2;
                 if (this.velocity.x <= 0) {
                     this.velocity.x = 0;
                 }
@@ -206,38 +205,37 @@ class Rocket {
 
         if(this.rotateRight || this.rotateLeft) {
             if (this.rotateRight) {
-                if (this.velocity.y > -0.07) {
-                    this.velocity.y -= 0.005;
+                if (this.velocity.y > -3.5) {
+                    this.velocity.y -= 0.5;
                 } 
             } else {
-                if (this.velocity.y < 0.07) {
-                    this.velocity.y += 0.005;
+                if (this.velocity.y < 3.5) {
+                    this.velocity.y += 0.5;
                 } 
             }
-            
         } else {
             if (this.velocity.y > 0) {
-                this.velocity.y -= 0.003;
+                this.velocity.y -= 0.4;
                 if (this.velocity.y <= 0) {
                     this.velocity.y = 0;
                 }
             } else if (this.velocity.y < 0) {
-                this.velocity.y += 0.003;
+                this.velocity.y += 0.4;
                 if (this.velocity.y >= 0) {
                     this.velocity.y = 0;
                 }
             }
         }
 
-        this.rocket.translateX(this.velocity.x);
-        this.rocket.rotateY(this.velocity.y);
+        this.rocket.translateX(this.velocity.x * this.game.delta);
+        this.rocket.rotateY(this.velocity.y * this.game.delta);
 
     }
 
-    ubicacion() {
-        const target = new THREE.Vector3(); 
-        this.rocket.getWorldPosition(target);
-        console.log(this.rocket.position);
+    shoot() {
+        const bullet = new Bullet(this.game, this.rocket);
+        this.game.bullets.push(bullet);
+        this.gunCharged = false;
     }
 
 }

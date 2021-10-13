@@ -9,6 +9,9 @@ class Game {
         document.body.appendChild(container);
 
         this.clock = new THREE.Clock();
+        this.delta = 0;
+        // 120 fps
+        this.interval = 1 / 120;
 
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
         this.camera.position.set(0,28,0);
@@ -22,7 +25,8 @@ class Game {
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		container.appendChild( this.renderer.domElement );
 
-        this.renderer.setAnimationLoop(this.render.bind(this));
+        //this.renderer.setAnimationLoop(this.render.bind(this));
+        window.requestAnimationFrame(this.render.bind(this));
 
         //Iluminación
         const ambient = new THREE.HemisphereLight(0xFFFFFF, 0xBBBBFF, 0.3);
@@ -38,6 +42,9 @@ class Game {
         //Creacion de la nave
         this.rocket = new Rocket(this);
 
+        //Balas
+        this.bullets = [];
+
         //Creación de los bordes
         this.edgeUp = new Edge(this, EdgeType.UP);
         this.edgeLeft = new Edge(this, EdgeType.LEFT);
@@ -46,8 +53,6 @@ class Game {
 
         window.addEventListener('resize', this.resize.bind(this));
 
-        console.log(window.innerWidth);
-        console.log(window.innerHeight);
     }
 
     resize() {
@@ -57,13 +62,29 @@ class Game {
     }
 
     render() {   
+        window.requestAnimationFrame(this.render.bind(this));
+        this.delta += this.clock.getDelta();
+
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
-        this.edgeUp.update(this.rocket.getObject());
-        this.edgeLeft.update(this.rocket.getObject());
-        this.edgeRight.update(this.rocket.getObject());
-        this.edgeDown.update(this.rocket.getObject());
-        this.renderer.render( this.scene, this.camera );
+        this.bullets = this.bullets.filter(bullet => bullet.exist);
+        this.bullets.forEach(bullet => { 
+            bullet.update(); 
+            this.edgesListener(bullet.getObject())
+        });
+        this.edgesListener(this.rocket.getObject());
+       
+        if (this.delta > this.interval) {
+            this.renderer.render( this.scene, this.camera );
+            this.delta = this.delta % this.interval;
+        }
+    }
+
+    edgesListener(obj) {
+        this.edgeUp.update(obj);
+        this.edgeLeft.update(obj);
+        this.edgeRight.update(obj);
+        this.edgeDown.update(obj);
     }
 
 }
