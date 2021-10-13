@@ -34,8 +34,8 @@ class Bullet {
 
         //Mientras aún tenga recorrido y no haya impactado con un asteroide
         if(this.limitDistance >= 0) {
-            this.velocity += 0.07;
-            this.bullet.translateY(this.velocity);
+            this.velocity += 5;
+            this.bullet.translateY(this.velocity * this.game.delta);
             this.limitDistance -= 1;
         } else {
             this.game.scene.remove(this.bullet);
