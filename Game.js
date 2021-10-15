@@ -44,7 +44,11 @@ class Game {
         this.rocket = new Rocket(this);
 
         //Creacion de un asteroide
-        this.asteroid = new Asteroid(this);
+        this.asteroid = new Asteroid(this, 0);
+        this.asteroid.getObject().position.x = 10;
+        this.asteroid1 = new Asteroid(this, 1);
+        this.asteroid1.getObject().position.x = -10;
+        this.asteroid2 = new Asteroid(this, 2);
 
         //Balas
         this.bullets = [];

@@ -8,28 +8,32 @@ const AsteroidType = {
 
 class Asteroid {
 
-    constructor(game) {
+    constructor(game, type) {
 
         this.game = game;
         
-        const type =  Math.floor(Math.random()*3);
+        if (type === undefined) {
+            const type =  Math.floor(Math.random()*3);
+        }
 
         switch(type) {
             case 0:
                 this.asteroidType = AsteroidType.A;
-                this.rock = this.createRock(5+Math.random()*1);
+                this.lives = 7;
+                this.rock = this.createRock(10+Math.random());
                 break;
             case 1:
                 this.asteroidType = AsteroidType.B;
-                this.rock = this.createRock(5+Math.random()*0.5);
+                this.lives = 3;
+                this.rock = this.createRock(5+Math.random());
                 break;
             case 2:
                 this.asteroidType = AsteroidType.C;
-                this.rock = this.createRock(5+Math.random()*0.1);
+                this.lives = 2;
+                this.rock = this.createRock(2.5+Math.random());
                 break;
         }
 
-        console.log("tipo: " + this.asteroidType);
         this.game.scene.add(this.rock);
 
     }
@@ -48,7 +52,8 @@ class Asteroid {
         const rock = new THREE.Mesh(geometry, texture);
         rock.castShadow = true;
         rock.receiveShadow = true;
-        rock.scale.set(1+Math.random()*0.2,1+Math.random()*0.4,1+Math.random()*0.2);
+        // rock.scale.set(1+Math.random()*0.002,1+Math.random()*0.004,1+Math.random()*0.002);
+        rock.scale.set(0.4,0.4,0.4);
         rock.r = {};
         rock.r.x = Math.random() * 0.15;
         rock.r.y = Math.random() * 0.15;
@@ -76,6 +81,10 @@ class Asteroid {
         }
     
         return rgb;
+    }
+
+    getObject() {
+        return this.rock;
     }
 
     update() {
