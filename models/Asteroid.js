@@ -16,29 +16,53 @@ class Asteroid {
             const type =  Math.floor(Math.random()*3);
         }
 
+        this.lessRadius = 0;
+
         switch(type) {
             case 0:
                 this.asteroidType = AsteroidType.A;
                 this.lives = 7;
+                this.lessRadius = 2.9;
                 this.rock = this.createRock(10+Math.random());
                 break;
             case 1:
                 this.asteroidType = AsteroidType.B;
                 this.lives = 3;
+                this.lessRadius = 1.5;
                 this.rock = this.createRock(5+Math.random());
                 break;
             case 2:
                 this.asteroidType = AsteroidType.C;
                 this.lives = 2;
+                this.lessRadius = 0.75;
                 this.rock = this.createRock(2.5+Math.random());
                 break;
         }
 
+        this.rockBox = new THREE.Box3().setFromObject(this.rock);
+
+        const center = new THREE.Vector3();
+        this.rockBox.getCenter(center);
+        this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
+        this.bsphere.set(center, this.bsphere.radius -= this.lessRadius);
+
+        let m = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            opacity: 0.3,
+            transparent: true
+        });
+        var geometry = new THREE.SphereGeometry(this.bsphere.radius, 32, 32);
+        this.sMesh = new THREE.Mesh(geometry, m);
+        this.game.scene.add(this.sMesh);
+        this.sMesh.position.copy(center);
         this.game.scene.add(this.rock);
 
     }
 
     createRock(size) {
+
+        const rock3D = new THREE.Object3D();
+
         const geometry = new THREE.DodecahedronGeometry(size, 1);
         var color = '#111111';
         color = this.colorLuminance(color,2+Math.random()*10);
@@ -52,14 +76,15 @@ class Asteroid {
         const rock = new THREE.Mesh(geometry, texture);
         rock.castShadow = true;
         rock.receiveShadow = true;
-        // rock.scale.set(1+Math.random()*0.002,1+Math.random()*0.004,1+Math.random()*0.002);
         rock.scale.set(0.4,0.4,0.4);
         rock.r = {};
         rock.r.x = Math.random() * 0.15;
         rock.r.y = Math.random() * 0.15;
         rock.r.z = Math.random() * 0.15;
    
-        return rock;
+        rock3D.add(rock);
+
+        return rock3D;
 
     }
 
@@ -87,10 +112,19 @@ class Asteroid {
         return this.rock;
     }
 
-    update() {
-        this.rock.rotation.x -= this.rock.r.x * this.game.delta;
-        this.rock.rotation.y -= this.rock.r.y * this.game.delta;
-        this.rock.rotation.z -= this.rock.r.z * this.game.delta;
+    update(obj) {
+
+        this.rock.rotateX(this.rock.children[0].r.x * this.game.delta);
+        this.rock.rotateY(this.rock.children[0].r.y * this.game.delta);
+        this.rock.rotateZ(this.rock.children[0].r.z * this.game.delta);
+
+        this.bsphere.set(this.rock.position, this.bsphere.radius);
+        this.sMesh.position.copy(this.rock.position);
+
+        if (this.bsphere.intersectsBox(obj.getBox())) {
+            console.log("Colision");
+        }
+
     }
 
 }

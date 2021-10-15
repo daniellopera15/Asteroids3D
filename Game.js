@@ -49,6 +49,7 @@ class Game {
         this.asteroid1 = new Asteroid(this, 1);
         this.asteroid1.getObject().position.x = -10;
         this.asteroid2 = new Asteroid(this, 2);
+        this.asteroid2.getObject().position.z = -10;
 
         //Balas
         this.bullets = [];
@@ -74,11 +75,12 @@ class Game {
         this.delta += this.clock.getDelta();
 
         const time = this.clock.getElapsedTime();
-        this.rocket.update(time);
-        this.asteroid.update();
+        this.rocket.update();
+        this.collisionAsteroids(this.rocket);
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
+            this.collisionAsteroids(bullet);
             this.edgesListener(bullet.getObject())
         });
         this.edgesListener(this.rocket.getObject());
@@ -87,6 +89,12 @@ class Game {
             this.renderer.render( this.scene, this.camera );
             this.delta = this.delta % this.interval;
         }
+    }
+
+    collisionAsteroids(obj) {
+        this.asteroid.update(obj);
+        this.asteroid1.update(obj);
+        this.asteroid2.update(obj);
     }
 
     edgesListener(obj) {

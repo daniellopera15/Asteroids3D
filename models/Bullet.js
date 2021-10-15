@@ -23,6 +23,7 @@ class Bullet {
         const bulletMesh = new THREE.Mesh(bulletGeometry, bulletMaterial);
 
         this.bullet.add(bulletMesh);
+        this.bulletBox = new THREE.Box3().setFromObject(this.bullet);
 
     }
 
@@ -30,7 +31,12 @@ class Bullet {
         return this.bullet;
     }
 
+    getBox() {
+        return this.bulletBox;
+    }
+
     update() {
+        this.bulletBox.setFromObject(this.bullet);
 
         //Mientras aún tenga recorrido y no haya impactado con un asteroide
         if(this.limitDistance >= 0) {

@@ -8,7 +8,8 @@ class Rocket {
 
         this.game = game;
         this.rocket = this.load();
-        
+        this.rocketBox = new THREE.Box3().setFromObject(this.rocket);
+
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
@@ -188,7 +189,12 @@ class Rocket {
         return this.rocket;
     }
 
-    update(time) {
+    getBox() {
+        return this.rocketBox;
+    }
+
+    update() {
+        this.rocketBox.setFromObject(this.rocket);
 
         if (this.speedUp) {
             if (this.velocity.x < 14.5) {
