@@ -39,9 +39,7 @@ class Asteroid {
                 break;
         }
 
-
         this.rockBox = new THREE.Box3().setFromObject(this.rock);
-        this.cubeBoxHelper = new THREE.BoxHelper(this.rock, 0xff0000);
 
         const center = new THREE.Vector3();
         this.rockBox.getCenter(center);
@@ -57,8 +55,6 @@ class Asteroid {
         this.sMesh = new THREE.Mesh(geometry, m);
         this.game.scene.add(this.sMesh);
         this.sMesh.position.copy(center);
-
-       this.game.scene.add(this.cubeBoxHelper);
         this.game.scene.add(this.rock);
 
     }
@@ -86,8 +82,6 @@ class Asteroid {
         rock.r.y = Math.random() * 0.15;
         rock.r.z = Math.random() * 0.15;
    
-        // rock.geometry.computeBoundingBox();
-
         rock3D.add(rock);
 
         return rock3D;
@@ -120,22 +114,17 @@ class Asteroid {
 
     update(obj) {
 
-        this.cubeBoxHelper.update();
-        this.rockBox.setFromObject(this.rock);
+        this.rock.rotateX(this.rock.children[0].r.x * this.game.delta);
+        this.rock.rotateY(this.rock.children[0].r.y * this.game.delta);
+        this.rock.rotateZ(this.rock.children[0].r.z * this.game.delta);
 
-        const center = new THREE.Vector3();
-        this.rockBox.getCenter(center);
-        this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
-        this.bsphere.set(center, this.bsphere.radius -= this.lessRadius);
+        this.bsphere.set(this.rock.position, this.bsphere.radius);
+        this.sMesh.position.copy(this.rock.position);
 
-        this.sMesh.position.copy(center);
+        if (this.bsphere.intersectsBox(obj.getBox())) {
+            console.log("Colision");
+        }
 
-        //console.log("caja", this.rockBox.intersectsBox(obj.getBox()));
-        //console.log("esfera", this.bsphere.intersectsBox(obj.getBox()));
-
-        // this.rock.rotation.x -= this.rock.r.x * this.game.delta;
-        // this.rock.rotation.y -= this.rock.r.y * this.game.delta;
-        // this.rock.rotation.z -= this.rock.r.z * this.game.delta;
     }
 
 }
