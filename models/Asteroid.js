@@ -16,20 +16,25 @@ class Asteroid {
             const type =  Math.floor(Math.random()*3);
         }
 
+        this.lessRadius = 0;
+
         switch(type) {
             case 0:
                 this.asteroidType = AsteroidType.A;
                 this.lives = 7;
+                this.lessRadius = 2.9;
                 this.rock = this.createRock(10+Math.random());
                 break;
             case 1:
                 this.asteroidType = AsteroidType.B;
                 this.lives = 3;
+                this.lessRadius = 1.5;
                 this.rock = this.createRock(5+Math.random());
                 break;
             case 2:
                 this.asteroidType = AsteroidType.C;
                 this.lives = 2;
+                this.lessRadius = 0.75;
                 this.rock = this.createRock(2.5+Math.random());
                 break;
         }
@@ -41,13 +46,13 @@ class Asteroid {
         const center = new THREE.Vector3();
         this.rockBox.getCenter(center);
         this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
+        this.bsphere.set(center, this.bsphere.radius -= this.lessRadius);
 
         let m = new THREE.MeshStandardMaterial({
             color: 0xffffff,
             opacity: 0.3,
             transparent: true
         });
-        console.log(this.bsphere);
         var geometry = new THREE.SphereGeometry(this.bsphere.radius, 32, 32);
         this.sMesh = new THREE.Mesh(geometry, m);
         this.game.scene.add(this.sMesh);
@@ -121,11 +126,12 @@ class Asteroid {
         const center = new THREE.Vector3();
         this.rockBox.getCenter(center);
         this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
+        this.bsphere.set(center, this.bsphere.radius -= this.lessRadius);
 
         this.sMesh.position.copy(center);
 
         //console.log("caja", this.rockBox.intersectsBox(obj.getBox()));
-       //console.log("esfera", this.bsphere.intersectsBox(obj.getBox()));
+        //console.log("esfera", this.bsphere.intersectsBox(obj.getBox()));
 
         // this.rock.rotation.x -= this.rock.r.x * this.game.delta;
         // this.rock.rotation.y -= this.rock.r.y * this.game.delta;
