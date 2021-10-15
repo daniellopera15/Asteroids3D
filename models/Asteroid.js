@@ -34,11 +34,19 @@ class Asteroid {
                 break;
         }
 
+this.cubeBoxHelper = new THREE.BoxHelper(this.rock, 0xff0000);
+        //this.rockBox = new THREE.Box3();
+        this.rockBox = new THREE.Box3().setFromObject(this.rock);
+       // this.rock.geometry.computeBoundingBox();
+       this.game.scene.add(this.cubeBoxHelper);
         this.game.scene.add(this.rock);
 
     }
 
     createRock(size) {
+
+        const rock3D = new THREE.Object3D();
+
         const geometry = new THREE.DodecahedronGeometry(size, 1);
         var color = '#111111';
         color = this.colorLuminance(color,2+Math.random()*10);
@@ -59,7 +67,11 @@ class Asteroid {
         rock.r.y = Math.random() * 0.15;
         rock.r.z = Math.random() * 0.15;
    
-        return rock;
+        // rock.geometry.computeBoundingBox();
+
+        rock3D.add(rock);
+
+        return rock3D;
 
     }
 
@@ -87,10 +99,18 @@ class Asteroid {
         return this.rock;
     }
 
-    update() {
-        this.rock.rotation.x -= this.rock.r.x * this.game.delta;
-        this.rock.rotation.y -= this.rock.r.y * this.game.delta;
-        this.rock.rotation.z -= this.rock.r.z * this.game.delta;
+    update(obj) {
+
+        this.cubeBoxHelper.update();
+        this.rockBox.setFromObject(this.rock);
+
+        //this.rockBox.copy( this.rock.geometry.boundingBox ).applyMatrix4( this.rock.matrixWorld );
+
+        console.log(this.rockBox.intersectsBox(obj.getBox()));
+
+        // this.rock.rotation.x -= this.rock.r.x * this.game.delta;
+        // this.rock.rotation.y -= this.rock.r.y * this.game.delta;
+        // this.rock.rotation.z -= this.rock.r.z * this.game.delta;
     }
 
 }

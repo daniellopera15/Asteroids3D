@@ -8,7 +8,17 @@ class Rocket {
 
         this.game = game;
         this.rocket = this.load();
-        
+        this.rocketBox = new THREE.Box3().setFromObject(this.rocket);
+
+        this.cubeBoxHelper = new THREE.BoxHelper(this.rocket, 0xffff00);
+        //this.cubeBoxHelper.update();
+        console.log(this.rocketBox);
+this.game.scene.add(this.cubeBoxHelper);
+
+        //this.rocketBox = new THREE.Box3();
+        //console.log(this.rocket);
+        //this.rocket.geometry.computeBoundingBox();
+
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
@@ -188,7 +198,14 @@ class Rocket {
         return this.rocket;
     }
 
+    getBox() {
+        return this.rocketBox;
+    }
+
     update(time) {
+        this.cubeBoxHelper.update();
+        this.rocketBox.setFromObject(this.rocket);
+       // this.rocketBox.copy( this.rocket.geometry.boundingBox ).applyMatrix4( this.rocket.matrixWorld );
 
         if (this.speedUp) {
             if (this.velocity.x < 14.5) {

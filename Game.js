@@ -49,6 +49,7 @@ class Game {
         this.asteroid1 = new Asteroid(this, 1);
         this.asteroid1.getObject().position.x = -10;
         this.asteroid2 = new Asteroid(this, 2);
+        this.asteroid2.getObject().position.z = -10;
 
         //Balas
         this.bullets = [];
@@ -75,7 +76,7 @@ class Game {
 
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
-        this.asteroid.update();
+        this.asteroid.update(this.rocket);
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
