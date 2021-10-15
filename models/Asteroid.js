@@ -34,10 +34,25 @@ class Asteroid {
                 break;
         }
 
-this.cubeBoxHelper = new THREE.BoxHelper(this.rock, 0xff0000);
-        //this.rockBox = new THREE.Box3();
+
         this.rockBox = new THREE.Box3().setFromObject(this.rock);
-       // this.rock.geometry.computeBoundingBox();
+        this.cubeBoxHelper = new THREE.BoxHelper(this.rock, 0xff0000);
+
+        const center = new THREE.Vector3();
+        this.rockBox.getCenter(center);
+        this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
+
+        let m = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            opacity: 0.3,
+            transparent: true
+        });
+        console.log(this.bsphere);
+        var geometry = new THREE.SphereGeometry(this.bsphere.radius, 32, 32);
+        this.sMesh = new THREE.Mesh(geometry, m);
+        this.game.scene.add(this.sMesh);
+        this.sMesh.position.copy(center);
+
        this.game.scene.add(this.cubeBoxHelper);
         this.game.scene.add(this.rock);
 
@@ -60,7 +75,6 @@ this.cubeBoxHelper = new THREE.BoxHelper(this.rock, 0xff0000);
         const rock = new THREE.Mesh(geometry, texture);
         rock.castShadow = true;
         rock.receiveShadow = true;
-        // rock.scale.set(1+Math.random()*0.002,1+Math.random()*0.004,1+Math.random()*0.002);
         rock.scale.set(0.4,0.4,0.4);
         rock.r = {};
         rock.r.x = Math.random() * 0.15;
@@ -104,9 +118,14 @@ this.cubeBoxHelper = new THREE.BoxHelper(this.rock, 0xff0000);
         this.cubeBoxHelper.update();
         this.rockBox.setFromObject(this.rock);
 
-        //this.rockBox.copy( this.rock.geometry.boundingBox ).applyMatrix4( this.rock.matrixWorld );
+        const center = new THREE.Vector3();
+        this.rockBox.getCenter(center);
+        this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
 
-        console.log(this.rockBox.intersectsBox(obj.getBox()));
+        this.sMesh.position.copy(center);
+
+        //console.log("caja", this.rockBox.intersectsBox(obj.getBox()));
+       //console.log("esfera", this.bsphere.intersectsBox(obj.getBox()));
 
         // this.rock.rotation.x -= this.rock.r.x * this.game.delta;
         // this.rock.rotation.y -= this.rock.r.y * this.game.delta;

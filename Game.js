@@ -38,7 +38,7 @@ class Game {
         this.scene.add(light);
 
         //Controles para testear
-        //const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
         //Creacion de la nave
         this.rocket = new Rocket(this);
@@ -77,6 +77,8 @@ class Game {
         const time = this.clock.getElapsedTime();
         this.rocket.update(time);
         this.asteroid.update(this.rocket);
+        //this.asteroid1.update(this.rocket);
+        //this.asteroid2.update(this.rocket);
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
