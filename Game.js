@@ -38,7 +38,7 @@ class Game {
         this.scene.add(light);
 
         //Controles para testear
-        const controls = new OrbitControls( this.camera, this.renderer.domElement );
+        //const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
         //Creacion de la nave
         this.rocket = new Rocket(this);
@@ -75,13 +75,12 @@ class Game {
         this.delta += this.clock.getDelta();
 
         const time = this.clock.getElapsedTime();
-        this.rocket.update(time);
-        this.asteroid.update(this.rocket);
-        this.asteroid1.update(this.rocket);
-        this.asteroid2.update(this.rocket);
+        this.rocket.update();
+        this.collisionAsteroids(this.rocket);
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
+            this.collisionAsteroids(bullet);
             this.edgesListener(bullet.getObject())
         });
         this.edgesListener(this.rocket.getObject());
@@ -90,6 +89,12 @@ class Game {
             this.renderer.render( this.scene, this.camera );
             this.delta = this.delta % this.interval;
         }
+    }
+
+    collisionAsteroids(obj) {
+        this.asteroid.update(obj);
+        this.asteroid1.update(obj);
+        this.asteroid2.update(obj);
     }
 
     edgesListener(obj) {

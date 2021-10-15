@@ -193,7 +193,7 @@ class Rocket {
         return this.rocketBox;
     }
 
-    update(time) {
+    update() {
         this.rocketBox.setFromObject(this.rocket);
 
         if (this.speedUp) {
