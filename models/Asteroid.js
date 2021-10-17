@@ -11,14 +11,18 @@ class Asteroid {
     constructor(game, type) {
 
         this.game = game;
+        this.type = type;
+        this.exist = true;
+        //BORRAR CUANDO LOS ASTEROIDES TENGAN SU CONFIGURACION DE INICIO
+        this.parcheRocket = true;
         
-        if (type === undefined) {
-            const type =  Math.floor(Math.random()*3);
+        if (this.type === undefined) {
+            this.type =  Math.floor(Math.random()*3);
         }
 
         this.lessRadius = 0;
 
-        switch(type) {
+        switch(this.type) {
             case 0:
                 this.asteroidType = AsteroidType.A;
                 this.lives = 7;
@@ -112,7 +116,40 @@ class Asteroid {
         return this.rock;
     }
 
-    update(obj) {
+    remove() {
+        this.game.scene.remove(this.rock);
+        this.game.scene.remove(this.sMesh);
+        this.exist = false;
+    }
+
+    sufferShot(bullet) {
+        this.lives--;
+
+        if (this.lives == 0) {
+            this.remove();
+        }
+
+        bullet.remove();
+    }
+
+    collision(obj) {
+
+        if (this.bsphere.intersectsBox(obj.getBox())) {
+            if (obj.name === 'Bullet') {
+                this.sufferShot(obj);
+            } else {
+                //SACAR DEL IF CUANDO ESTE EL COMPORTAMIENTO DE INICIO DE ASTEROIDES
+                if (this.parcheRocket) {
+                    this.parcheRocket = false;
+                } else {
+                    obj.remove();
+                }
+            }
+        }
+
+    }
+
+    update() {
 
         this.rock.rotateX(this.rock.children[0].r.x * this.game.delta);
         this.rock.rotateY(this.rock.children[0].r.y * this.game.delta);
@@ -120,10 +157,6 @@ class Asteroid {
 
         this.bsphere.set(this.rock.position, this.bsphere.radius);
         this.sMesh.position.copy(this.rock.position);
-
-        if (this.bsphere.intersectsBox(obj.getBox())) {
-            console.log("Colision");
-        }
 
     }
 

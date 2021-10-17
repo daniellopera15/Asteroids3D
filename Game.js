@@ -40,16 +40,21 @@ class Game {
         //Controles para testear
         //const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
+        //Asteroides
+        this.asteroids = [];
+        var asteroid = new Asteroid(this, 0);
+        asteroid.getObject().position.x = 10;
+        this.asteroids.push(asteroid);
+        asteroid = new Asteroid(this, 1);
+        asteroid.getObject().position.x = -10;
+        this.asteroids.push(asteroid);
+        asteroid = new Asteroid(this, 2);
+        asteroid.getObject().position.z = -10;
+        this.asteroids.push(asteroid);
+
         //Creacion de la nave
         this.rocket = new Rocket(this);
-
-        //Creacion de un asteroide
-        this.asteroid = new Asteroid(this, 0);
-        this.asteroid.getObject().position.x = 10;
-        this.asteroid1 = new Asteroid(this, 1);
-        this.asteroid1.getObject().position.x = -10;
-        this.asteroid2 = new Asteroid(this, 2);
-        this.asteroid2.getObject().position.z = -10;
+        // this.rocket.getObject().position.z = 10;
 
         //Balas
         this.bullets = [];
@@ -73,16 +78,27 @@ class Game {
     render() {   
         window.requestAnimationFrame(this.render.bind(this));
         this.delta += this.clock.getDelta();
-
         const time = this.clock.getElapsedTime();
+
+        //Nave
         this.rocket.update();
         this.collisionAsteroids(this.rocket);
+
+        //Asteroides
+        this.asteroids = this.asteroids.filter(asteroid => asteroid.exist);
+        this.asteroids.forEach(asteroid => {
+            asteroid.update();
+        });
+
+        //Disparos
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
             this.collisionAsteroids(bullet);
             this.edgesListener(bullet.getObject())
         });
+
+        //Bordes
         this.edgesListener(this.rocket.getObject());
        
         if (this.delta > this.interval) {
@@ -92,9 +108,7 @@ class Game {
     }
 
     collisionAsteroids(obj) {
-        this.asteroid.update(obj);
-        this.asteroid1.update(obj);
-        this.asteroid2.update(obj);
+        this.asteroids.forEach(asteroid => asteroid.collision(obj));
     }
 
     edgesListener(obj) {
