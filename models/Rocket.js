@@ -8,7 +8,14 @@ class Rocket {
 
         this.game = game;
         this.rocket = this.load();
-        
+        this.name = 'Rocket';
+        this.rocketBox = new THREE.Box3().setFromObject(this.rocket);
+
+        const center = new THREE.Vector3();
+        this.rocketBox.getCenter(center);
+        this.bsphere = this.rocketBox.getBoundingSphere(new THREE.Sphere(center));
+        this.bsphere.set(center, this.bsphere.radius -= 0.58);
+
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
@@ -188,7 +195,20 @@ class Rocket {
         return this.rocket;
     }
 
-    update(time) {
+    getSphere() {
+        return this.bsphere;
+    }
+
+    remove() {
+        this.game.scene.remove(this.rocket);
+    }
+
+    update() {
+        this.rocketBox.setFromObject(this.rocket);
+        const center = new THREE.Vector3();
+        var position = this.rocketBox.getCenter(center);
+        position.x = position.x - 0.2;
+        this.bsphere.set(position, this.bsphere.radius);
 
         if (this.speedUp) {
             if (this.velocity.x < 14.5) {
