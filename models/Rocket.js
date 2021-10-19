@@ -10,8 +10,21 @@ class Rocket {
         this.rocket = this.load();
         this.name = 'Rocket';
         this.rocketBox = new THREE.Box3().setFromObject(this.rocket);
-        this.box = new THREE.BoxHelper( this.rocket, 0xffff00 );
-        this.game.scene.add( this.box );
+
+        const center = new THREE.Vector3();
+        this.rocketBox.getCenter(center);
+        this.bsphere = this.rocketBox.getBoundingSphere(new THREE.Sphere(center));
+        this.bsphere.set(center, this.bsphere.radius -= 0.58);
+
+        let m = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            opacity: 0.3,
+            transparent: true
+        });
+        var geometry = new THREE.SphereGeometry(this.bsphere.radius, 32, 32);
+        this.sMesh = new THREE.Mesh(geometry, m);
+        this.game.scene.add(this.sMesh);
+        this.sMesh.position.copy((3,3,3));
 
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
@@ -192,8 +205,8 @@ class Rocket {
         return this.rocket;
     }
 
-    getBox() {
-        return this.rocketBox;
+    getSphere() {
+        return this.bsphere;
     }
 
     remove() {
@@ -202,7 +215,11 @@ class Rocket {
 
     update() {
         this.rocketBox.setFromObject(this.rocket);
-        this.box.update();
+        const center = new THREE.Vector3();
+        var position = this.rocketBox.getCenter(center);
+        position.x = position.x - 0.2;
+        this.bsphere.set(position, this.bsphere.radius);
+        this.sMesh.position.copy(position);
 
         if (this.speedUp) {
             if (this.velocity.x < 14.5) {

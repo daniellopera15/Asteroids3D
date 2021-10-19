@@ -26,7 +26,6 @@ class Game {
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		container.appendChild( this.renderer.domElement );
 
-        //this.renderer.setAnimationLoop(this.render.bind(this));
         window.requestAnimationFrame(this.render.bind(this));
 
         //Iluminación
@@ -38,7 +37,7 @@ class Game {
         this.scene.add(light);
 
         //Controles para testear
-        //const controls = new OrbitControls( this.camera, this.renderer.domElement );
+       // const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
         //Asteroides
         this.asteroids = [];
@@ -54,7 +53,6 @@ class Game {
 
         //Creacion de la nave
         this.rocket = new Rocket(this);
-        // this.rocket.getObject().position.z = 10;
 
         //Balas
         this.bullets = [];

@@ -134,17 +134,17 @@ class Asteroid {
 
     collision(obj) {
 
-        if (this.bsphere.intersectsBox(obj.getBox())) {
-            if (obj.name === 'Bullet') {
-                this.sufferShot(obj);
+        if(obj.name === 'Rocket' && this.bsphere.intersectsSphere(obj.getSphere())) {
+            //SACAR DEL IF CUANDO ESTE EL COMPORTAMIENTO DE INICIO DE ASTEROIDES
+            if (this.parcheRocket) {
+                this.parcheRocket = false;
             } else {
-                //SACAR DEL IF CUANDO ESTE EL COMPORTAMIENTO DE INICIO DE ASTEROIDES
-                if (this.parcheRocket) {
-                    this.parcheRocket = false;
-                } else {
-                    obj.remove();
-                }
+                obj.remove();
             }
+        }
+
+        if (obj.name === 'Bullet' && this.bsphere.intersectsBox(obj.getBox())) {
+            this.sufferShot(obj);
         }
 
     }
