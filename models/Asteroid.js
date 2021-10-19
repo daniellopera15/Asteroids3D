@@ -50,15 +50,6 @@ class Asteroid {
         this.bsphere = this.rockBox.getBoundingSphere(new THREE.Sphere(center));
         this.bsphere.set(center, this.bsphere.radius -= this.lessRadius);
 
-        let m = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            opacity: 0.3,
-            transparent: true
-        });
-        var geometry = new THREE.SphereGeometry(this.bsphere.radius, 32, 32);
-        this.sMesh = new THREE.Mesh(geometry, m);
-        this.game.scene.add(this.sMesh);
-        this.sMesh.position.copy(center);
         this.game.scene.add(this.rock);
 
     }
@@ -118,7 +109,6 @@ class Asteroid {
 
     remove() {
         this.game.scene.remove(this.rock);
-        this.game.scene.remove(this.sMesh);
         this.exist = false;
     }
 
@@ -156,7 +146,6 @@ class Asteroid {
         this.rock.rotateZ(this.rock.children[0].r.z * this.game.delta);
 
         this.bsphere.set(this.rock.position, this.bsphere.radius);
-        this.sMesh.position.copy(this.rock.position);
 
     }
 
