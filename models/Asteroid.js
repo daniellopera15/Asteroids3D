@@ -58,8 +58,6 @@ class Asteroid {
                 break;
         }
 
-        this.rock.rotateY( 3*Math.PI / 2);
-
         this.rockBox = new THREE.Box3().setFromObject(this.rock);
 
         const center = new THREE.Vector3();

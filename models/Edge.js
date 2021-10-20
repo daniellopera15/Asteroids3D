@@ -38,6 +38,10 @@ class Edge {
 
     }
 
+    getObject() {
+        return this.line;
+    }
+
     update(obj) {
 
         switch(this.type) {

@@ -37,31 +37,23 @@ class Game {
         this.scene.add(light);
 
         //Controles para testear
-       // const controls = new OrbitControls( this.camera, this.renderer.domElement );
-
-        //Asteroides
-        this.asteroids = [];
-        var asteroid = new Asteroid(this, 2);
-        asteroid.getObject().position.x = 10;
-        this.asteroids.push(asteroid);
-        // asteroid = new Asteroid(this, 1);
-        // asteroid.getObject().position.x = -10;
-        // this.asteroids.push(asteroid);
-        // asteroid = new Asteroid(this, 2);
-        // asteroid.getObject().position.z = -10;
-        // this.asteroids.push(asteroid);
-
-        //Creacion de la nave
-        this.rocket = new Rocket(this);
-
-        //Balas
-        this.bullets = [];
+        //const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
         //Creación de los bordes
         this.edgeUp = new Edge(this, EdgeType.UP);
         this.edgeLeft = new Edge(this, EdgeType.LEFT);
         this.edgeRight = new Edge(this, EdgeType.RIGHT);
         this.edgeDown = new Edge(this, EdgeType.DOWN);
+
+        //Asteroides
+        this.asteroids = [];
+        this.createAsteroid();
+
+        //Creacion de la nave
+        this.rocket = new Rocket(this);
+
+        //Balas
+        this.bullets = [];
 
         window.addEventListener('resize', this.resize.bind(this));
 
@@ -104,6 +96,40 @@ class Game {
             this.renderer.render( this.scene, this.camera );
             this.delta = this.delta % this.interval;
         }
+    }
+
+    createAsteroid() {
+        const asteroid = new Asteroid(this);
+        const edge = Math.floor(Math.random()*4);
+        const sign = Math.floor(Math.random()*2) == 1 ? 1 : -1;
+
+        switch(edge) {
+            //UP
+            case 0:
+                asteroid.getObject().position.x = this.edgeUp.getObject().position.x;
+                asteroid.getObject().position.z = Math.random()*36 * sign;
+                asteroid.getObject().rotateY(0);
+                break;
+            //LEFT
+            case 1:
+                asteroid.getObject().position.z = this.edgeLeft.getObject().position.z;
+                asteroid.getObject().position.x = Math.random()*18 * sign;
+                asteroid.getObject().rotateY(Math.PI / 2);
+                break;
+            //RIGHT
+            case 2:
+                asteroid.getObject().position.z = this.edgeRight.getObject().position.z;
+                asteroid.getObject().position.x = Math.random()*18 * sign;
+                asteroid.getObject().rotateY(3 * Math.PI / 2);
+                break;
+            //DOWN
+            case 3:
+                asteroid.getObject().position.x = this.edgeDown.getObject().position.x;
+                asteroid.getObject().position.z = Math.random()*36 * sign;
+                asteroid.getObject().rotateY(Math.PI);
+                break;
+        }
+        this.asteroids.push(asteroid);
     }
 
     collisionAsteroids(obj) {
