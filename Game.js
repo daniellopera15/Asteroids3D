@@ -41,15 +41,15 @@ class Game {
 
         //Asteroides
         this.asteroids = [];
-        var asteroid = new Asteroid(this, 0);
+        var asteroid = new Asteroid(this, 2);
         asteroid.getObject().position.x = 10;
         this.asteroids.push(asteroid);
-        asteroid = new Asteroid(this, 1);
-        asteroid.getObject().position.x = -10;
-        this.asteroids.push(asteroid);
-        asteroid = new Asteroid(this, 2);
-        asteroid.getObject().position.z = -10;
-        this.asteroids.push(asteroid);
+        // asteroid = new Asteroid(this, 1);
+        // asteroid.getObject().position.x = -10;
+        // this.asteroids.push(asteroid);
+        // asteroid = new Asteroid(this, 2);
+        // asteroid.getObject().position.z = -10;
+        // this.asteroids.push(asteroid);
 
         //Creacion de la nave
         this.rocket = new Rocket(this);
@@ -86,6 +86,7 @@ class Game {
         this.asteroids = this.asteroids.filter(asteroid => asteroid.exist);
         this.asteroids.forEach(asteroid => {
             asteroid.update();
+            this.edgesListener(asteroid.getObject())
         });
 
         //Disparos

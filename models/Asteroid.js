@@ -27,21 +27,38 @@ class Asteroid {
                 this.asteroidType = AsteroidType.A;
                 this.lives = 7;
                 this.lessRadius = 2.9;
-                this.rock = this.createRock(10+Math.random());
+                this.rock = this.createRock(10+Math.random(), 0.15);
+                this.rock.distanceEdgeX = 1;
+                this.rock.limitEdgeX = -1;
+                this.rock.distanceEdgeZ = 1.5;
+                this.rock.limitEdgeZ = -1;
+                this.velocityTranslate = 1;
                 break;
             case 1:
                 this.asteroidType = AsteroidType.B;
                 this.lives = 3;
                 this.lessRadius = 1.5;
-                this.rock = this.createRock(5+Math.random());
+                this.rock = this.createRock(5+Math.random(), 0.6);
+                this.rock.distanceEdgeX = 1.2;
+                this.rock.limitEdgeX = 1.3;
+                this.rock.distanceEdgeZ = 1.8;
+                this.rock.limitEdgeZ = 2;
+                this.velocityTranslate = 3.5;
                 break;
             case 2:
                 this.asteroidType = AsteroidType.C;
                 this.lives = 2;
                 this.lessRadius = 0.75;
-                this.rock = this.createRock(2.5+Math.random());
+                this.rock = this.createRock(2.5+Math.random(), 0.8);
+                this.rock.distanceEdgeX = 1.5;
+                this.rock.limitEdgeX = 2;
+                this.rock.distanceEdgeZ = 3;
+                this.rock.limitEdgeZ = 3;
+                this.velocityTranslate = 5;
                 break;
         }
+
+        this.rock.rotateY( 3*Math.PI / 2);
 
         this.rockBox = new THREE.Box3().setFromObject(this.rock);
 
@@ -54,7 +71,7 @@ class Asteroid {
 
     }
 
-    createRock(size) {
+    createRock(size, velocity) {
 
         const rock3D = new THREE.Object3D();
 
@@ -73,9 +90,7 @@ class Asteroid {
         rock.receiveShadow = true;
         rock.scale.set(0.4,0.4,0.4);
         rock.r = {};
-        rock.r.x = Math.random() * 0.15;
-        rock.r.y = Math.random() * 0.15;
-        rock.r.z = Math.random() * 0.15;
+        rock.r.x = Math.random() * velocity;
    
         rock3D.add(rock);
 
@@ -142,9 +157,7 @@ class Asteroid {
     update() {
 
         this.rock.rotateX(this.rock.children[0].r.x * this.game.delta);
-        this.rock.rotateY(this.rock.children[0].r.y * this.game.delta);
-        this.rock.rotateZ(this.rock.children[0].r.z * this.game.delta);
-
+        this.rock.translateX(this.velocityTranslate * this.game.delta);
         this.bsphere.set(this.rock.position, this.bsphere.radius);
 
     }

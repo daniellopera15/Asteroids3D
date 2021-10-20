@@ -11,6 +11,8 @@ class Bullet {
         this.bullet.translateY(2);
         this.bullet.distanceEdgeX = 1;
         this.bullet.distanceEdgeZ = 1;
+        this.bullet.limitEdgeX = 2.6;
+        this.bullet.limitEdgeZ = 4.8;
         this.name = 'Bullet';
         this.velocity = 0;
         this.limitDistance = 30;

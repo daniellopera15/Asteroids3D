@@ -42,22 +42,22 @@ class Edge {
 
         switch(this.type) {
             case EdgeType.UP:
-                if (this.line.position.x - obj.position.x <= 2.6) {
+                if (this.line.position.x - obj.position.x <= obj.limitEdgeX) {
                    obj.position.x = obj.position.x * -1 + obj.distanceEdgeX;
                 }
                 break;
             case EdgeType.DOWN:
-                if (this.line.position.x - obj.position.x >= -2.6) {
+                if (this.line.position.x - obj.position.x >= -1 * obj.limitEdgeX) {
                     obj.position.x = obj.position.x * -1 - obj.distanceEdgeX;
                 }
                 break;
             case EdgeType.LEFT:
-                if (this.line.position.z - obj.position.z >= -4.8) {
+                if (this.line.position.z - obj.position.z >= -1 * obj.limitEdgeZ) {
                     obj.position.z = obj.position.z * -1 - obj.distanceEdgeZ;
                 }
                 break;
             case EdgeType.RIGHT:
-                if (this.line.position.z - obj.position.z <= 4.8) {
+                if (this.line.position.z - obj.position.z <= obj.limitEdgeZ) {
                     obj.position.z = obj.position.z * -1 + obj.distanceEdgeZ;
                 }
                 break;
