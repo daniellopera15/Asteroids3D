@@ -19,6 +19,8 @@ class Rocket {
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
+        this.rocket.limitEdgeX = 2.6;
+        this.rocket.limitEdgeZ = 4.8;
         this.gunCharged = true;
         this.speedUp = false;
         this.rotateLeft = false;
