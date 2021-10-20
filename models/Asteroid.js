@@ -32,7 +32,7 @@ class Asteroid {
                 this.rock.limitEdgeX = -1;
                 this.rock.distanceEdgeZ = 1.5;
                 this.rock.limitEdgeZ = -1;
-                this.velocityTranslate = 1;
+                this.velocityTranslate = 2.5;
                 break;
             case 1:
                 this.asteroidType = AsteroidType.B;

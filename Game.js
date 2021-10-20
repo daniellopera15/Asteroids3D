@@ -108,25 +108,25 @@ class Game {
             case 0:
                 asteroid.getObject().position.x = this.edgeUp.getObject().position.x;
                 asteroid.getObject().position.z = Math.random()*36 * sign;
-                asteroid.getObject().rotateY(0);
+                asteroid.getObject().rotateY(Math.random()*(7 * Math.PI / 6) + (5 * Math.PI / 6));
                 break;
             //LEFT
             case 1:
                 asteroid.getObject().position.z = this.edgeLeft.getObject().position.z;
                 asteroid.getObject().position.x = Math.random()*18 * sign;
-                asteroid.getObject().rotateY(Math.PI / 2);
+                asteroid.getObject().rotateY(Math.random()*(4 * Math.PI / 6) + (Math.PI / 3));
                 break;
             //RIGHT
             case 2:
                 asteroid.getObject().position.z = this.edgeRight.getObject().position.z;
                 asteroid.getObject().position.x = Math.random()*18 * sign;
-                asteroid.getObject().rotateY(3 * Math.PI / 2);
+                asteroid.getObject().rotateY(Math.random()*(4 * Math.PI / 6) + (Math.PI / 3));
                 break;
             //DOWN
             case 3:
                 asteroid.getObject().position.x = this.edgeDown.getObject().position.x;
                 asteroid.getObject().position.z = Math.random()*36 * sign;
-                asteroid.getObject().rotateY(Math.PI);
+                asteroid.getObject().rotateY(Math.random()*(7 * Math.PI / 6) + (5 * Math.PI / 6));
                 break;
         }
         this.asteroids.push(asteroid);
