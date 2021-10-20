@@ -1,6 +1,7 @@
 import * as THREE from './libs/three.module.js';
 import { OrbitControls } from './libs/OrbitControls.js';
 import { Rocket } from './models/Rocket.js';
+import { Asteroid } from './models/Asteroid.js';
 import { Edge, EdgeType } from './models/Edge.js';
 
 class Game {
@@ -25,7 +26,6 @@ class Game {
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
 		container.appendChild( this.renderer.domElement );
 
-        //this.renderer.setAnimationLoop(this.render.bind(this));
         window.requestAnimationFrame(this.render.bind(this));
 
         //Iluminación
@@ -39,17 +39,21 @@ class Game {
         //Controles para testear
         //const controls = new OrbitControls( this.camera, this.renderer.domElement );
 
-        //Creacion de la nave
-        this.rocket = new Rocket(this);
-
-        //Balas
-        this.bullets = [];
-
         //Creación de los bordes
         this.edgeUp = new Edge(this, EdgeType.UP);
         this.edgeLeft = new Edge(this, EdgeType.LEFT);
         this.edgeRight = new Edge(this, EdgeType.RIGHT);
         this.edgeDown = new Edge(this, EdgeType.DOWN);
+
+        //Asteroides
+        this.asteroids = [];
+        this.createAsteroid();
+
+        //Creacion de la nave
+        this.rocket = new Rocket(this);
+
+        //Balas
+        this.bullets = [];
 
         window.addEventListener('resize', this.resize.bind(this));
 
@@ -64,20 +68,72 @@ class Game {
     render() {   
         window.requestAnimationFrame(this.render.bind(this));
         this.delta += this.clock.getDelta();
-
         const time = this.clock.getElapsedTime();
-        this.rocket.update(time);
+
+        //Nave
+        this.rocket.update();
+        this.collisionAsteroids(this.rocket);
+
+        //Asteroides
+        this.asteroids = this.asteroids.filter(asteroid => asteroid.exist);
+        this.asteroids.forEach(asteroid => {
+            asteroid.update();
+            this.edgesListener(asteroid.getObject())
+        });
+
+        //Disparos
         this.bullets = this.bullets.filter(bullet => bullet.exist);
         this.bullets.forEach(bullet => { 
             bullet.update(); 
+            this.collisionAsteroids(bullet);
             this.edgesListener(bullet.getObject())
         });
+
+        //Bordes
         this.edgesListener(this.rocket.getObject());
        
         if (this.delta > this.interval) {
             this.renderer.render( this.scene, this.camera );
             this.delta = this.delta % this.interval;
         }
+    }
+
+    createAsteroid() {
+        const asteroid = new Asteroid(this);
+        const edge = Math.floor(Math.random()*4);
+        const sign = Math.floor(Math.random()*2) == 1 ? 1 : -1;
+
+        switch(edge) {
+            //UP
+            case 0:
+                asteroid.getObject().position.x = this.edgeUp.getObject().position.x;
+                asteroid.getObject().position.z = Math.random()*36 * sign;
+                asteroid.getObject().rotateY(Math.random()*(7 * Math.PI / 6) + (5 * Math.PI / 6));
+                break;
+            //LEFT
+            case 1:
+                asteroid.getObject().position.z = this.edgeLeft.getObject().position.z;
+                asteroid.getObject().position.x = Math.random()*18 * sign;
+                asteroid.getObject().rotateY(Math.random()*(4 * Math.PI / 6) + (Math.PI / 3));
+                break;
+            //RIGHT
+            case 2:
+                asteroid.getObject().position.z = this.edgeRight.getObject().position.z;
+                asteroid.getObject().position.x = Math.random()*18 * sign;
+                asteroid.getObject().rotateY(Math.random()*(4 * Math.PI / 6) + (Math.PI / 3));
+                break;
+            //DOWN
+            case 3:
+                asteroid.getObject().position.x = this.edgeDown.getObject().position.x;
+                asteroid.getObject().position.z = Math.random()*36 * sign;
+                asteroid.getObject().rotateY(Math.random()*(7 * Math.PI / 6) + (5 * Math.PI / 6));
+                break;
+        }
+        this.asteroids.push(asteroid);
+    }
+
+    collisionAsteroids(obj) {
+        this.asteroids.forEach(asteroid => asteroid.collision(obj));
     }
 
     edgesListener(obj) {

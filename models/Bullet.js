@@ -11,6 +11,9 @@ class Bullet {
         this.bullet.translateY(2);
         this.bullet.distanceEdgeX = 1;
         this.bullet.distanceEdgeZ = 1;
+        this.bullet.limitEdgeX = 2.6;
+        this.bullet.limitEdgeZ = 4.8;
+        this.name = 'Bullet';
         this.velocity = 0;
         this.limitDistance = 30;
         this.exist = true;
@@ -23,6 +26,7 @@ class Bullet {
         const bulletMesh = new THREE.Mesh(bulletGeometry, bulletMaterial);
 
         this.bullet.add(bulletMesh);
+        this.bulletBox = new THREE.Box3().setFromObject(this.bullet);
 
     }
 
@@ -30,7 +34,17 @@ class Bullet {
         return this.bullet;
     }
 
+    getBox() {
+        return this.bulletBox;
+    }
+
+    remove() {
+        this.game.scene.remove(this.bullet);
+        this.exist = false;
+    }
+
     update() {
+        this.bulletBox.setFromObject(this.bullet);
 
         //Mientras aún tenga recorrido y no haya impactado con un asteroide
         if(this.limitDistance >= 0) {
@@ -38,8 +52,7 @@ class Bullet {
             this.bullet.translateY(this.velocity * this.game.delta);
             this.limitDistance -= 1;
         } else {
-            this.game.scene.remove(this.bullet);
-            this.exist = false;
+            this.remove();
         }
 
     }
