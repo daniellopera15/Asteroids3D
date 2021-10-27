@@ -16,6 +16,8 @@ class Rocket {
         this.bsphere = this.rocketBox.getBoundingSphere(new THREE.Sphere(center));
         this.bsphere.set(center, this.bsphere.radius -= 0.58);
 
+        this.lives = 3;
+        this.shield = false;
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
@@ -203,6 +205,45 @@ class Rocket {
 
     remove() {
         this.game.scene.remove(this.rocket);
+        this.lives--;
+        this.shield = true;
+        if (this.lives > 0) {
+            const rocketClass = this;
+            setTimeout(function(){rocketClass.reborn()}, 2000);
+        }
+    }
+
+    isShieldActive() {
+        return this.shield;
+    }
+
+    delay = ms => new Promise(res => setTimeout(res, ms));
+
+    reborn() {
+        this.rocket.position.set(0,0,0);
+        this.rocket.rotation.set(0,0,0);
+        this.velocity.x = 0; this.velocity.y = 0;
+        this.inter = true;
+
+        const rocketClass = this;
+        this.intermittent();
+        setTimeout(function() {
+            rocketClass.inter = false; 
+            rocketClass.shield = false; 
+        }, 3000);
+
+    }
+
+    intermittent = async () => {
+
+        this.game.scene.remove(this.rocket);
+        await this.delay(400);
+        this.game.scene.add(this.rocket);
+        await this.delay(400);
+        if (this.inter) {
+            this.intermittent();
+        } 
+
     }
 
     update() {
