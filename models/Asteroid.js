@@ -142,7 +142,9 @@ class Asteroid {
             if (this.parcheRocket) {
                 this.parcheRocket = false;
             } else {
-                obj.remove();
+                if (!obj.isShieldActive()) {
+                    obj.remove();
+                }
             }
         }
 
