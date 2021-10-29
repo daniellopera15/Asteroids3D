@@ -1,4 +1,5 @@
 import * as THREE from '../../libs/three.module.js';
+import { SoundsEnum } from '../sfx/sounds/SoundsEnum.js';
 
 class Bullet {
 
