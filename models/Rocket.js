@@ -181,7 +181,7 @@ class Rocket {
     }
 
     keyDown(evt) {
-        if (this.lives <= 0) {
+        if (!this.game.isPlayGame()) {
             return;
         }
         switch(evt.keyCode) {
@@ -222,6 +222,7 @@ class Rocket {
     remove() {
         this.game.scene.remove(this.rocket);
         this.game.sfx.play(SoundsEnum.EXPLOSION);
+        this.game.decLives();
         this.lives--;
         this.shield = true;
         if (this.lives > 0) {
