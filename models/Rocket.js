@@ -18,6 +18,7 @@ class Rocket {
         this.bsphere.set(center, this.bsphere.radius -= 0.58);
 
         this.lives = 3;
+        this.isRegenerating = false;
         this.shield = false;
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
@@ -181,7 +182,7 @@ class Rocket {
     }
 
     keyDown(evt) {
-        if (!this.game.isPlayGame()) {
+        if (!this.game.isPlayGame() || this.isRegenerating) {
             return;
         }
         switch(evt.keyCode) {
@@ -220,8 +221,10 @@ class Rocket {
     }
 
     remove() {
+        this.isRegenerating = true;
         this.game.scene.remove(this.rocket);
         this.game.sfx.play(SoundsEnum.EXPLOSION);
+        this.game.sfx.stop(SoundsEnum.ROCKET);
         this.game.decLives();
         this.lives--;
         this.shield = true;
@@ -244,6 +247,7 @@ class Rocket {
         this.rocket.rotation.set(0,0,0);
         this.velocity.x = 0; this.velocity.y = 0;
         this.inter = true;
+        this.isRegenerating = false;
 
         const rocketClass = this;
         this.intermittent();
