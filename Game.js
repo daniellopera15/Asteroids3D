@@ -24,9 +24,11 @@ class Game {
         this.sfx = new SFX(this.camera, './sfx/sounds/');
         this.sfx.load(SoundsEnum.GAME_SOUND, true, 1);
         this.sfx.load(SoundsEnum.ROCKET, true);
-        this.sfx.load(SoundsEnum.SHOOT);
         this.sfx.load(SoundsEnum.EXPLOSION);
         this.sfx.load(SoundsEnum.GAME_OVER, false, 1);
+        for (let i = 1; i <= 10; i++) {
+            this.sfx.load(SoundsEnum.SHOOT + "_" + i);
+        }
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.TextureLoader().load('./background/space.png', function(texture) {});

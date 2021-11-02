@@ -1,4 +1,5 @@
 import { AudioListener, Audio, PositionalAudio, AudioLoader }  from '../libs/three.module.js';
+import { SoundsEnum } from './sounds/SoundsEnum.js';
 
 class SFX {
 
@@ -15,9 +16,11 @@ class SFX {
         const sound = (obj == null) ? new Audio(this.listener) :
         PositionalAudio(this.listener);
 
-        const newSound = {name: name, sound: sound, loaded: false};
+        this.sounds[name] = sound;
 
-        this.sounds[name] = newSound;
+        if(name.startsWith(SoundsEnum.SHOOT)) {
+            name = SoundsEnum.SHOOT;
+        }
 
         const audioLoader = new AudioLoader().setPath(this.assetsPath);
         audioLoader.load(`${name}.mp3`, buffer => {
@@ -27,12 +30,8 @@ class SFX {
         });
     }
 
-    isLoadead(name) {
-        return this.sounds[name].loaded;
-    }
-
     setVolume(name, volume) {
-        const sound = this.sounds[name].sound;
+        const sound = this.sounds[name];
 
         if (sound !== undefined) {
             sound.setVolume(volume);
@@ -40,7 +39,7 @@ class SFX {
     }
 
     setLoop(name, loop) {
-        const sound = this.sounds[name].sound;
+        const sound = this.sounds[name];
 
         if (sound !== undefined) {
             sound.setLoop(loop);
@@ -48,17 +47,32 @@ class SFX {
     }
     
     play(name) {
-        const sound = this.sounds[name].sound;
+        if (name !== SoundsEnum.SHOOT) {
 
-        if (sound !== undefined && !sound.isPLaying) {
-            sound.play();
+            const sound = this.sounds[name];
+
+            if (sound !== undefined && !sound.isPlaying) {
+                sound.play();
+            }
+
+        } else {
+
+            for(let i = 1; i <= 10; i++) {
+                const sound = this.sounds[SoundsEnum.SHOOT + "_" + i];
+
+                if (sound !== undefined && !sound.isPlaying) {
+                    sound.play();                    
+                    break;
+                }
+            }
+
         }
     }
 
     stop(name) {
-        const sound = this.sounds[name].sound;
+        const sound = this.sounds[name];
 
-        if (sound !== undefined && !sound.isPLaying) {
+        if (sound !== undefined && sound.isPlaying) {
             sound.stop();
         }
     }
@@ -70,9 +84,9 @@ class SFX {
     }
 
     pause(name) {
-        const sound = this.sounds[name].sound;
+        const sound = this.sounds[name];
 
-        if (sound !== undefined && !sound.isPLaying) {
+        if (sound !== undefined && sound.isPlaying) {
             sound.pause();
         }
     }
