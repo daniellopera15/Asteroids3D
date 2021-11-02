@@ -1,4 +1,5 @@
 import * as THREE from '../../libs/three.module.js';
+import { SoundsEnum } from '../sfx/sounds/SoundsEnum.js';
 
 const AsteroidType = {
     A: "A",
@@ -122,6 +123,7 @@ class Asteroid {
 
     remove() {
         this.game.scene.remove(this.rock);
+        this.game.sfx.play(SoundsEnum.EXPLOSION);
         this.exist = false;
     }
 

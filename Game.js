@@ -3,6 +3,8 @@ import { OrbitControls } from './libs/OrbitControls.js';
 import { Rocket } from './models/Rocket.js';
 import { Asteroid } from './models/Asteroid.js';
 import { Edge, EdgeType } from './models/Edge.js';
+import { SFX } from './sfx/SFX.js';
+import { SoundsEnum } from './sfx/sounds/SoundsEnum.js';
 
 class Game {
     constructor() {
@@ -17,6 +19,16 @@ class Game {
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
         this.camera.position.set(0,28,0);
         this.camera.rotateX(3 * Math.PI / 2); this.camera.rotateZ(3 * Math.PI / 2);
+
+        //Sonido
+        this.sfx = new SFX(this.camera, './sfx/sounds/');
+        this.sfx.load(SoundsEnum.GAME_SOUND, true, 1);
+        this.sfx.load(SoundsEnum.ROCKET, true);
+        this.sfx.load(SoundsEnum.EXPLOSION);
+        this.sfx.load(SoundsEnum.GAME_OVER, false, 1);
+        for (let i = 1; i <= 10; i++) {
+            this.sfx.load(SoundsEnum.SHOOT + "_" + i);
+        }
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.TextureLoader().load('./background/space.png', function(texture) {});
@@ -54,6 +66,10 @@ class Game {
 
         //Balas
         this.bullets = [];
+
+        //ESTE TIMEOUT SE DEBERIA QUITAR CUANDO EXISTA EL MENU, SE DEBE PORQUE NO HA CARGADOdw
+        const gameClass = this;
+        setTimeout(function(){gameClass.sfx.play(SoundsEnum.GAME_SOUND)}, 1000);
 
         window.addEventListener('resize', this.resize.bind(this));
 
@@ -141,6 +157,10 @@ class Game {
         this.edgeLeft.update(obj);
         this.edgeRight.update(obj);
         this.edgeDown.update(obj);
+    }
+
+    gameOver() {
+        this.sfx.play(SoundsEnum.GAME_OVER);
     }
 
 }
