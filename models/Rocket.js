@@ -1,6 +1,7 @@
 import * as THREE from '../../libs/three.module.js';
 import { Bullet } from './Bullet.js';
 import { Vector2 } from '../../libs/three.module.js';
+import { SoundsEnum } from '../sfx/sounds/SoundsEnum.js';
 
 class Rocket {
 
@@ -16,11 +17,15 @@ class Rocket {
         this.bsphere = this.rocketBox.getBoundingSphere(new THREE.Sphere(center));
         this.bsphere.set(center, this.bsphere.radius -= 0.58);
 
+        this.lives = 3;
+        this.isRegenerating = false;
+        this.shield = false;
         this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
         this.rocket.limitEdgeX = 2.6;
         this.rocket.limitEdgeZ = 4.8;
+        this.soundActive = false;
         this.gunCharged = true;
         this.speedUp = false;
         this.rotateLeft = false;
@@ -145,10 +150,17 @@ class Rocket {
     }
 
     keyUp(evt) {
+        if (this.lives <= 0) {
+            return;
+        }
         switch(evt.keyCode) {
             //Forward
             case 87:
             case 38:
+                if (this.soundActive) {
+                    this.soundActive = false;
+                    this.game.sfx.stop(SoundsEnum.ROCKET);
+                }
                 this.speedUp = false;
                 break;
             //Left
@@ -170,10 +182,17 @@ class Rocket {
     }
 
     keyDown(evt) {
+        if (!this.game.isPlayGame() || this.isRegenerating) {
+            return;
+        }
         switch(evt.keyCode) {
             //Forward
             case 87:
             case 38:
+                if (!this.soundActive) {
+                    this.soundActive = true;
+                    this.game.sfx.play(SoundsEnum.ROCKET);
+                }
                 this.speedUp = true;
                 break;
             //Left
@@ -202,7 +221,53 @@ class Rocket {
     }
 
     remove() {
+        this.isRegenerating = true;
         this.game.scene.remove(this.rocket);
+        this.game.sfx.play(SoundsEnum.EXPLOSION);
+        this.game.sfx.stop(SoundsEnum.ROCKET);
+        this.game.decLives();
+        this.lives--;
+        this.shield = true;
+        if (this.lives > 0) {
+            const rocketClass = this;
+            setTimeout(function(){rocketClass.reborn()}, 2000);
+        } else {
+            this.game.gameOver();
+        }
+    }
+
+    isShieldActive() {
+        return this.shield;
+    }
+
+    delay = ms => new Promise(res => setTimeout(res, ms));
+
+    reborn() {
+        this.rocket.position.set(0,0,0);
+        this.rocket.rotation.set(0,0,0);
+        this.velocity.x = 0; this.velocity.y = 0;
+        this.inter = true;
+        this.isRegenerating = false;
+
+        const rocketClass = this;
+        this.intermittent();
+        setTimeout(function() {
+            rocketClass.inter = false; 
+            rocketClass.shield = false; 
+        }, 3000);
+
+    }
+
+    intermittent = async () => {
+
+        this.game.scene.remove(this.rocket);
+        await this.delay(400);
+        this.game.scene.add(this.rocket);
+        await this.delay(400);
+        if (this.inter) {
+            this.intermittent();
+        } 
+
     }
 
     update() {
@@ -256,6 +321,7 @@ class Rocket {
 
     shoot() {
         const bullet = new Bullet(this.game, this.rocket);
+        this.game.sfx.play(SoundsEnum.SHOOT);
         this.game.bullets.push(bullet);
         this.gunCharged = false;
     }

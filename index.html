@@ -3,9 +3,84 @@
     <head>
         <style>
 			body { margin: 0; }
+            #title {
+                position: absolute;
+                font-family: 'DejaVu Sans Mono, monospace';
+                font-size: 100px;
+                text-align: center;
+                width: 100%;
+                top: 15%;
+                color: rgb(255, 255, 255);
+            }
+            #playBtn {
+                position: absolute;
+                width: 180px;
+                height: 100px;
+                font-size: 40px;
+                bottom: 25%;
+                border-radius: 20px;
+                background-color: darkblue;
+                color: white;
+                left: 50%;
+                transform: translateX(-50%);
+                cursor: pointer;
+            }
+            #playBtn:hover {
+                transform: translateX(-50%), scale(0.98);
+                box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+            }
+            #gameover {
+                position: absolute;
+                font-family: 'DejaVu Sans Mono, monospace';
+                font-size: 100px;
+                text-align: center;
+                width: 100%;
+                top: 25%;
+                color: rgb(255, 255, 255);
+            }
+            #info {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                font-family: 'DejaVu Sans Mono, monospace';
+                font-size: 38px;
+                color: rgb(255, 255, 255);
+            }
+            #score-panel {
+                position: absolute;
+                left: 20px;
+            }
+            #life {
+                position: absolute;
+                top: 0;
+                right: 20px;
+                float: right;
+            }
+            #score {
+                display: inline;
+                position: relative;
+                top: 10px;
+            }
+            #lives {
+                display: inline;
+                position: relative;
+                top: 10px;
+            }
 		</style>
     </head>
     <body>
+        <div id="info">
+            <div id="score-panel">
+                <div id="score"></div>
+            </div>
+            <div id="life">
+                <div id="lives"></div>
+            </div>
+        </div>
+        <p id="gameover">Game Over</p>
+        <h1 id="title">Asteroids 3D</h1>
+        <button id="playBtn">PLAY</button>
         <script type="module">
             import { Game } from './Game.js';
 

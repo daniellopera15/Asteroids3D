@@ -3,11 +3,13 @@ import { OrbitControls } from './libs/OrbitControls.js';
 import { Rocket } from './models/Rocket.js';
 import { Asteroid } from './models/Asteroid.js';
 import { Edge, EdgeType } from './models/Edge.js';
+import { SFX } from './sfx/SFX.js';
+import { SoundsEnum } from './sfx/sounds/SoundsEnum.js';
 
 class Game {
     constructor() {
-        const container = document.createElement('div');
-        document.body.appendChild(container);
+        this.container = document.createElement('div');
+        document.body.appendChild(this.container);
 
         this.clock = new THREE.Clock();
         this.delta = 0;
@@ -18,13 +20,62 @@ class Game {
         this.camera.position.set(0,28,0);
         this.camera.rotateX(3 * Math.PI / 2); this.camera.rotateZ(3 * Math.PI / 2);
 
+        //Sonido
+        this.sfx = new SFX(this.camera, './sfx/sounds/');
+        this.sfx.load(SoundsEnum.GAME_SOUND, true, 1);
+        this.sfx.load(SoundsEnum.ROCKET, true);
+        this.sfx.load(SoundsEnum.EXPLOSION);
+        this.sfx.load(SoundsEnum.GAME_OVER, false, 1);
+        for (let i = 1; i <= 10; i++) {
+            this.sfx.load(SoundsEnum.SHOOT + "_" + i);
+        }
+
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.TextureLoader().load('./background/space.png', function(texture) {});
 
+        window.addEventListener('resize', this.resize.bind(this));
+
+        this.load();
+
+        this.playGame = false;
+
+        const gameover = document.getElementById('gameover');
+        gameover.style.display = 'none';
+
+        const btn = document.getElementById('playBtn');
+        btn.addEventListener('click', this.startGame.bind(this));
+
+    }
+
+    startGame() {
+        const title = document.getElementById('title');
+        const btn = document.getElementById('playBtn');
+
+        title.style.display = 'none';
+        btn.style.display = 'none';
+
+        this.score = 0;
+        this.lives = 3;
+
+        let elm = document.getElementById('score');
+        elm.innerHTML = 'SCORE ' + this.score;
+        
+        elm = document.getElementById('lives');
+        elm.innerHTML = 'LIFES ' + this.lives;
+
+        this.sfx.play(SoundsEnum.GAME_SOUND);
+
+        this.playGame = true;
+
+        this.createAsteroid();
+
+    }
+
+    load() {
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio( window.devicePixelRatio );
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
-		container.appendChild( this.renderer.domElement );
+		this.container.appendChild( this.renderer.domElement );
 
         window.requestAnimationFrame(this.render.bind(this));
 
@@ -45,17 +96,14 @@ class Game {
         this.edgeRight = new Edge(this, EdgeType.RIGHT);
         this.edgeDown = new Edge(this, EdgeType.DOWN);
 
-        //Asteroides
-        this.asteroids = [];
-        this.createAsteroid();
-
         //Creacion de la nave
         this.rocket = new Rocket(this);
 
         //Balas
         this.bullets = [];
 
-        window.addEventListener('resize', this.resize.bind(this));
+        //Asteroides
+        this.asteroids = [];
 
     }
 
@@ -96,6 +144,10 @@ class Game {
             this.renderer.render( this.scene, this.camera );
             this.delta = this.delta % this.interval;
         }
+    }
+
+    isPlayGame() {
+        return this.playGame;
     }
 
     createAsteroid() {
@@ -141,6 +193,25 @@ class Game {
         this.edgeLeft.update(obj);
         this.edgeRight.update(obj);
         this.edgeDown.update(obj);
+    }
+
+    incScore(score){
+        this.score += score;
+        const elm = document.getElementById('score');
+        elm.innerHTML = 'SCORE ' + this.score;
+    }
+
+    decLives(){
+        this.lives--;
+        const elm = document.getElementById('lives');
+        elm.innerHTML = 'LIFES ' + this.lives;
+    }
+
+    gameOver() {
+        this.playGame = false;
+        this.sfx.play(SoundsEnum.GAME_OVER);
+        const gameover = document.getElementById('gameover');
+        gameover.style.display = 'block';
     }
 
 }
