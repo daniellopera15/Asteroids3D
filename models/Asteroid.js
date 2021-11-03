@@ -124,9 +124,14 @@ class Asteroid {
         return this.rock;
     }
 
+    getType() {
+        return this.asteroidType;
+    }
+
     remove() {
         this.game.scene.remove(this.rock);
         this.game.incScore(this.score);
+        this.game.decAsteroids(this.asteroidType);
         this.game.sfx.play(SoundsEnum.EXPLOSION);
         this.exist = false;
     }
@@ -170,4 +175,4 @@ class Asteroid {
 
 }
 
-export { Asteroid };
+export { Asteroid, AsteroidType };
