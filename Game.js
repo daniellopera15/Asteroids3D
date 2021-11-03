@@ -67,7 +67,7 @@ class Game {
 
         this.playGame = true;
 
-        this.asteroirdsLimit = 20;
+        this.asteroirdsLimit = 24;
         this.asteroidsScreen = 0;
 
         this.startAsteroids();
@@ -167,7 +167,7 @@ class Game {
         let asteroidValue;
         switch(type) {
             case 0:
-                asteroidValue = 3;
+                asteroidValue = 6;
                 break;
             case 1:
                 asteroidValue = 2;
@@ -227,18 +227,8 @@ class Game {
         this.edgeDown.update(obj);
     }
 
-    decAsteroids(type) {
-        switch(type) {
-            case AsteroidType.A:
-                this.asteroidsScreen -= 3;
-                break;
-            case AsteroidType.B:
-                this.asteroidsScreen -= 2;
-                break;
-            case AsteroidType.C:
-                this.asteroidsScreen -= 1;
-                break;
-        }
+    decAsteroids() {
+        this.asteroidsScreen -= 1;
     }
 
     incScore(score){
