@@ -124,7 +124,34 @@ class Asteroid {
         return this.rock;
     }
 
+    getType() {
+        return this.asteroidType;
+    }
+
     remove() {
+
+        switch(this.asteroidType) {
+            case AsteroidType.A:
+                for(let i = 0; i < 3; i++) {
+                    const asteroid = new Asteroid(this.game, 1);
+                    asteroid.getObject().position.copy(this.rock.position);
+                    asteroid.getObject().rotateY(Math.random()*(2 * Math.PI) + 0);
+                    this.game.asteroids.push(asteroid);
+                }
+                break;
+            case AsteroidType.B:
+                for(let i = 0; i < 2; i++) {
+                    const asteroid = new Asteroid(this.game, 2);
+                    asteroid.getObject().position.copy(this.rock.position);
+                    asteroid.getObject().rotateY(Math.random()*(2 * Math.PI) + 0);
+                    this.game.asteroids.push(asteroid);
+                }
+                break;
+            case AsteroidType.C:
+                this.game.decAsteroids();
+                break;
+        }
+
         this.game.scene.remove(this.rock);
         this.game.incScore(this.score);
         this.game.sfx.play(SoundsEnum.EXPLOSION);
@@ -170,4 +197,4 @@ class Asteroid {
 
 }
 
-export { Asteroid };
+export { Asteroid, AsteroidType };

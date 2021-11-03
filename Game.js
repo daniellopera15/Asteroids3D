@@ -1,7 +1,7 @@
 import * as THREE from './libs/three.module.js';
 import { OrbitControls } from './libs/OrbitControls.js';
 import { Rocket } from './models/Rocket.js';
-import { Asteroid } from './models/Asteroid.js';
+import { Asteroid, AsteroidType } from './models/Asteroid.js';
 import { Edge, EdgeType } from './models/Edge.js';
 import { SFX } from './sfx/SFX.js';
 import { SoundsEnum } from './sfx/sounds/SoundsEnum.js';
@@ -67,8 +67,19 @@ class Game {
 
         this.playGame = true;
 
-        this.createAsteroid();
+        this.asteroirdsLimit = 24;
+        this.asteroidsScreen = 0;
 
+        this.startAsteroids();
+
+    }
+
+    startAsteroids() {
+        const gameClass = this;
+        setTimeout(function() {
+            gameClass.createAsteroid();
+            gameClass.startAsteroids();
+        }, 2500);
     }
 
     load() {
@@ -151,7 +162,28 @@ class Game {
     }
 
     createAsteroid() {
-        const asteroid = new Asteroid(this);
+
+        const type =  Math.floor(Math.random()*3);
+        let asteroidValue;
+        switch(type) {
+            case 0:
+                asteroidValue = 6;
+                break;
+            case 1:
+                asteroidValue = 2;
+                break;
+            case 2:
+                asteroidValue = 1;
+                break;
+        }
+
+        if (this.asteroidsScreen + asteroidValue > this.asteroirdsLimit) {
+            return;
+        }
+
+        this.asteroidsScreen += asteroidValue;
+
+        const asteroid = new Asteroid(this, type);
         const edge = Math.floor(Math.random()*4);
         const sign = Math.floor(Math.random()*2) == 1 ? 1 : -1;
 
@@ -193,6 +225,10 @@ class Game {
         this.edgeLeft.update(obj);
         this.edgeRight.update(obj);
         this.edgeDown.update(obj);
+    }
+
+    decAsteroids() {
+        this.asteroidsScreen -= 1;
     }
 
     incScore(score){
