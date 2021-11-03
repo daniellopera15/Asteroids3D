@@ -8,8 +8,8 @@ import { SoundsEnum } from './sfx/sounds/SoundsEnum.js';
 
 class Game {
     constructor() {
-        const container = document.createElement('div');
-        document.body.appendChild(container);
+        this.container = document.createElement('div');
+        document.body.appendChild(this.container);
 
         this.clock = new THREE.Clock();
         this.delta = 0;
@@ -33,10 +33,49 @@ class Game {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.TextureLoader().load('./background/space.png', function(texture) {});
 
+        window.addEventListener('resize', this.resize.bind(this));
+
+        this.load();
+
+        this.playGame = false;
+
+        const gameover = document.getElementById('gameover');
+        gameover.style.display = 'none';
+
+        const btn = document.getElementById('playBtn');
+        btn.addEventListener('click', this.startGame.bind(this));
+
+    }
+
+    startGame() {
+        const title = document.getElementById('title');
+        const btn = document.getElementById('playBtn');
+
+        title.style.display = 'none';
+        btn.style.display = 'none';
+
+        this.score = 0;
+        this.lives = 3;
+
+        let elm = document.getElementById('score');
+        elm.innerHTML = 'SCORE ' + this.score;
+        
+        elm = document.getElementById('lives');
+        elm.innerHTML = 'LIFES ' + this.lives;
+
+        this.sfx.play(SoundsEnum.GAME_SOUND);
+
+        this.playGame = true;
+
+        this.createAsteroid();
+
+    }
+
+    load() {
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
         this.renderer.setPixelRatio( window.devicePixelRatio );
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
-		container.appendChild( this.renderer.domElement );
+		this.container.appendChild( this.renderer.domElement );
 
         window.requestAnimationFrame(this.render.bind(this));
 
@@ -57,21 +96,14 @@ class Game {
         this.edgeRight = new Edge(this, EdgeType.RIGHT);
         this.edgeDown = new Edge(this, EdgeType.DOWN);
 
-        //Asteroides
-        this.asteroids = [];
-        this.createAsteroid();
-
         //Creacion de la nave
         this.rocket = new Rocket(this);
 
         //Balas
         this.bullets = [];
 
-        //ESTE TIMEOUT SE DEBERIA QUITAR CUANDO EXISTA EL MENU, SE DEBE PORQUE NO HA CARGADOdw
-        const gameClass = this;
-        setTimeout(function(){gameClass.sfx.play(SoundsEnum.GAME_SOUND)}, 1000);
-
-        window.addEventListener('resize', this.resize.bind(this));
+        //Asteroides
+        this.asteroids = [];
 
     }
 
@@ -112,6 +144,10 @@ class Game {
             this.renderer.render( this.scene, this.camera );
             this.delta = this.delta % this.interval;
         }
+    }
+
+    isPlayGame() {
+        return this.playGame;
     }
 
     createAsteroid() {
@@ -159,8 +195,23 @@ class Game {
         this.edgeDown.update(obj);
     }
 
+    incScore(score){
+        this.score += score;
+        const elm = document.getElementById('score');
+        elm.innerHTML = 'SCORE ' + this.score;
+    }
+
+    decLives(){
+        this.lives--;
+        const elm = document.getElementById('lives');
+        elm.innerHTML = 'LIFES ' + this.lives;
+    }
+
     gameOver() {
+        this.playGame = false;
         this.sfx.play(SoundsEnum.GAME_OVER);
+        const gameover = document.getElementById('gameover');
+        gameover.style.display = 'block';
     }
 
 }

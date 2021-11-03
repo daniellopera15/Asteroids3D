@@ -27,6 +27,7 @@ class Asteroid {
             case 0:
                 this.asteroidType = AsteroidType.A;
                 this.lives = 7;
+                this.score = 100;
                 this.lessRadius = 2.9;
                 this.rock = this.createRock(10+Math.random(), 0.15);
                 this.rock.distanceEdgeX = 1;
@@ -38,6 +39,7 @@ class Asteroid {
             case 1:
                 this.asteroidType = AsteroidType.B;
                 this.lives = 3;
+                this.score = 50;
                 this.lessRadius = 1.5;
                 this.rock = this.createRock(5+Math.random(), 0.6);
                 this.rock.distanceEdgeX = 1.2;
@@ -49,6 +51,7 @@ class Asteroid {
             case 2:
                 this.asteroidType = AsteroidType.C;
                 this.lives = 2;
+                this.score = 25;
                 this.lessRadius = 0.75;
                 this.rock = this.createRock(2.5+Math.random(), 0.8);
                 this.rock.distanceEdgeX = 1.5;
@@ -123,6 +126,7 @@ class Asteroid {
 
     remove() {
         this.game.scene.remove(this.rock);
+        this.game.incScore(this.score);
         this.game.sfx.play(SoundsEnum.EXPLOSION);
         this.exist = false;
     }
