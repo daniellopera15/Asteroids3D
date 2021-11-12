@@ -19,19 +19,11 @@ class Rocket {
         this.bsphere = this.rocketBox.getBoundingSphere(new THREE.Sphere(center));
         this.bsphere.set(center, this.bsphere.radius -= 0.58);
 
-        this.lives = 3;
-        this.isRegenerating = false;
-        this.shield = false;
-        this.velocity = new Vector2(0,0);
         this.rocket.distanceEdgeX = 0.3;
         this.rocket.distanceEdgeZ = 0.5;
         this.rocket.limitEdgeX = 2.6;
         this.rocket.limitEdgeZ = 4.8;
-        this.soundActive = false;
-        this.gunCharged = true;
-        this.speedUp = false;
-        this.rotateLeft = false;
-        this.rotateRight = false;
+        this.init();
 
         //Controls
         document.addEventListener('keyup', this.keyUp.bind(this));
@@ -39,10 +31,24 @@ class Rocket {
 
     }
 
+    init() {
+        this.lives = 3;
+        this.isRegenerating = false;
+        this.shield = false;
+        this.velocity = new Vector2(0,0);
+        this.soundActive = false;
+        this.gunCharged = true;
+        this.speedUp = false;
+        this.rotateLeft = false;
+        this.rotateRight = false;
+        this.rocket.position.set(0,0,0);
+        this.rocket.rotation.set(0,0,0);
+        this.game.scene.add(this.rocket);
+    }
+
     load() {
 
         const rocket = new THREE.Object3D();
-        this.game.scene.add(rocket);
 
         //Base
         const baseGeometry = new THREE.BoxGeometry();

@@ -160,6 +160,10 @@ class Asteroid {
         this.exist = false;
     }
 
+    clean() {
+        this.game.scene.remove(this.rock);
+    }
+
     sufferShot(bullet) {
         this.lives--;
 
