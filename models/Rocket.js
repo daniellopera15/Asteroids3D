@@ -1,5 +1,6 @@
 import * as THREE from '../../libs/three.module.js';
 import { Fire } from "../../libs/Fire/Fire.js";
+import { Explosion } from "../../libs/Explosion/Explosion.js";
 import { Bullet } from './Bullet.js';
 import { Vector2 } from '../../libs/three.module.js';
 import { SoundsEnum } from '../sfx/sounds/SoundsEnum.js';
@@ -252,6 +253,7 @@ class Rocket {
         this.game.decLives();
         this.lives--;
         this.shield = true;
+        new Explosion(this.game, this.rocket);
         if (this.lives > 0) {
             const rocketClass = this;
             setTimeout(function(){rocketClass.reborn()}, 2000);
@@ -293,7 +295,7 @@ class Rocket {
         } 
 
     }
-
+ 
     update() {
         this.fireLeft.update(this.game.time);
         this.fireRight.update(this.game.time);
