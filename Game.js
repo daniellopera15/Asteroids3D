@@ -42,6 +42,10 @@ class Game {
         const gameover = document.getElementById('gameover');
         gameover.style.display = 'none';
 
+        const retryBtn = document.getElementById('retryBtn');
+        retryBtn.addEventListener('click', this.startGame.bind(this));
+        retryBtn.style.display = 'none';
+
         const btn = document.getElementById('playBtn');
         btn.addEventListener('click', this.startGame.bind(this));
 
@@ -49,10 +53,16 @@ class Game {
 
     startGame() {
         const title = document.getElementById('title');
-        const btn = document.getElementById('playBtn');
+        const playBtn = document.getElementById('playBtn');
+        const gameover = document.getElementById('gameover');
+        const retryBtn = document.getElementById('retryBtn');
 
         title.style.display = 'none';
-        btn.style.display = 'none';
+        playBtn.style.display = 'none';
+        gameover.style.display = 'none';
+        retryBtn.style.display = 'none';
+
+        this.rocket.init();
 
         this.score = 0;
         this.lives = 3;
@@ -70,8 +80,16 @@ class Game {
         this.asteroirdsLimit = 24;
         this.asteroidsScreen = 0;
 
+        this.cleanAsteroids();
         this.startAsteroids();
 
+    }
+
+    cleanAsteroids() {
+        this.asteroids.forEach(asteroid => {
+            asteroid.clean();
+        });
+        this.asteroids = [];
     }
 
     startAsteroids() {
@@ -262,6 +280,8 @@ class Game {
         this.sfx.play(SoundsEnum.GAME_OVER);
         const gameover = document.getElementById('gameover');
         gameover.style.display = 'block';
+        const retryBtn = document.getElementById('retryBtn');
+        retryBtn.style.display = 'block';
     }
 
 }
