@@ -1,4 +1,5 @@
 import * as THREE from '../../libs/three.module.js';
+import { Fire } from "../../libs/Fire/Fire.js";
 import { Bullet } from './Bullet.js';
 import { Vector2 } from '../../libs/three.module.js';
 import { SoundsEnum } from '../sfx/sounds/SoundsEnum.js';
@@ -90,6 +91,14 @@ class Rocket {
         thrusterRight.position.z = 0.3;
         baseMesh.add(thrusterLeft);
         baseMesh.add(thrusterRight);
+        this.fireLeft = this.createThrustersFire();
+        this.fireRight = this.createThrustersFire();
+        this.fireLeft.fire.rotateZ(Math.PI / 2); this.fireLeft.fire.position.x = -1.35;
+        this.fireRight.fire.rotateZ(Math.PI / 2); this.fireRight.fire.position.x = -1.35;
+        this.fireRight.fire.visible = false;
+        this.fireLeft.fire.visible = false;
+        thrusterLeft.add(this.fireLeft.fire);
+        thrusterRight.add(this.fireRight.fire);
 
         const wingRight = this.createWings();
         const wingLeft = this.createWings();
@@ -104,14 +113,25 @@ class Rocket {
 
     createThrusters() {
 
+        const thruster = new THREE.Object3D();
+
         const thrusterGeometry = new THREE.CylinderGeometry(0.3, 0.1, 0.4, 19);
         const thrusterMaterial = new THREE.MeshPhongMaterial({color: 'gray'});
         const thrusterMesh = new THREE.Mesh(thrusterGeometry, thrusterMaterial);
         thrusterMesh.rotateZ(Math.PI / 2);
         thrusterMesh.position.x = -0.7;
 
-        return thrusterMesh;
+        thruster.add(thrusterMesh);
 
+        return thruster;
+
+    }
+
+    createThrustersFire() {
+        var textureLoader = new THREE.TextureLoader();
+        var tex = textureLoader.load("./../images/Fire.png");
+        var fire = new Fire( tex );
+        return fire;
     }
 
     createWings() {
@@ -162,6 +182,8 @@ class Rocket {
                     this.game.sfx.stop(SoundsEnum.ROCKET);
                 }
                 this.speedUp = false;
+                this.fireRight.fire.visible = false;
+                this.fireLeft.fire.visible = false;
                 break;
             //Left
             case 65:
@@ -193,6 +215,8 @@ class Rocket {
                     this.soundActive = true;
                     this.game.sfx.play(SoundsEnum.ROCKET);
                 }
+                this.fireRight.fire.visible = true;
+                this.fireLeft.fire.visible = true;
                 this.speedUp = true;
                 break;
             //Left
@@ -271,6 +295,8 @@ class Rocket {
     }
 
     update() {
+        this.fireLeft.update(this.game.time);
+        this.fireRight.update(this.game.time);
         this.rocketBox.setFromObject(this.rocket);
         const center = new THREE.Vector3();
         var position = this.rocketBox.getCenter(center);

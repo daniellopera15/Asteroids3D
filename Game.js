@@ -31,7 +31,7 @@ class Game {
         }
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.TextureLoader().load('./background/space.png', function(texture) {});
+        this.scene.background = new THREE.TextureLoader().load('./images/space.png', function(texture) {});
 
         window.addEventListener('resize', this.resize.bind(this));
 
@@ -127,7 +127,7 @@ class Game {
     render() {   
         window.requestAnimationFrame(this.render.bind(this));
         this.delta += this.clock.getDelta();
-        const time = this.clock.getElapsedTime();
+        this.time = this.clock.getElapsedTime();
 
         //Nave
         this.rocket.update();
