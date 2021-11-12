@@ -26,7 +26,7 @@ class Game {
         this.sfx.load(SoundsEnum.ROCKET, true);
         this.sfx.load(SoundsEnum.GAME_OVER, false, 1);
         for (let i = 1; i <= 10; i++) {
-            this.sfx.load(SoundsEnum.SHOOT + "_" + i);
+            this.sfx.load(SoundsEnum.SHOOT + "_" + i, false, 0.16);
             this.sfx.load(SoundsEnum.EXPLOSION + "_" + i);
         }
 
