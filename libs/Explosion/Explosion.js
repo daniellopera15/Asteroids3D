@@ -11,12 +11,19 @@ class Explosion {
         this.totalObjects = 1000;
         const movementSpeed = 80 * this.game.delta;
         const objectSize = 0.1;
+
+        var color;
+        if (obj.name == 'Rocket') {
+            color = 0xFFFFFF;
+        } else {
+            color = 0xFF0000;
+        }
   
         for (var i = 0; i < this.totalObjects; i++) { 
             var vertex = new THREE.Vector3();
-            vertex.x = obj.position.x;
-            vertex.y = obj.position.y;
-            vertex.z = obj.position.z;
+            vertex.x = obj.getObject().position.x;
+            vertex.y = obj.getObject().position.y;
+            vertex.z = obj.getObject().position.z;
 
             this.vertices.push(vertex);
             this.dirs.push({
@@ -27,7 +34,7 @@ class Explosion {
         }
 
         const geometry = new THREE.BufferGeometry().setFromPoints(this.vertices);
-        const material = new THREE.ParticleBasicMaterial( { size: objectSize,  color: 0xFFFFFF });
+        const material = new THREE.ParticleBasicMaterial( { size: objectSize,  color: color });
         const particles = new THREE.ParticleSystem( geometry, material );
         
         this.explosion = particles;

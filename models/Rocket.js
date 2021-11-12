@@ -253,7 +253,7 @@ class Rocket {
         this.game.decLives();
         this.lives--;
         this.shield = true;
-        new Explosion(this.game, this.rocket);
+        new Explosion(this.game, this);
         if (this.lives > 0) {
             const rocketClass = this;
             setTimeout(function(){rocketClass.reborn()}, 2000);
