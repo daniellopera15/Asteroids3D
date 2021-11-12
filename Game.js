@@ -116,6 +116,9 @@ class Game {
         //Asteroides
         this.asteroids = [];
 
+        //Explosions
+        this.explosions = [];
+
     }
 
     resize() {
@@ -146,6 +149,12 @@ class Game {
             bullet.update(); 
             this.collisionAsteroids(bullet);
             this.edgesListener(bullet.getObject())
+        });
+
+        //Explosiones
+        this.explosions = this.explosions.filter(explosion => explosion.exist);
+        this.explosions.forEach(explosion => {
+            explosion.update();
         });
 
         //Bordes
@@ -218,6 +227,11 @@ class Game {
 
     collisionAsteroids(obj) {
         this.asteroids.forEach(asteroid => asteroid.collision(obj));
+    }
+
+    addExplosion(explosion) {
+        this.explosions.push(explosion);
+        this.scene.add(explosion.explosion);
     }
 
     edgesListener(obj) {
