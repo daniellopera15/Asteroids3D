@@ -238,7 +238,9 @@ class Rocket {
                 break;
             //Shoot
             case 32:
-                this.shoot();
+                if(this.gunCharged){
+                    this.shoot();
+                }
                 break;
         }
     }
