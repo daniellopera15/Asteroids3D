@@ -22,6 +22,10 @@ class SFX {
             name = SoundsEnum.SHOOT;
         }
 
+        if(name.startsWith(SoundsEnum.EXPLOSION)) {
+            name = SoundsEnum.EXPLOSION;
+        }
+
         const audioLoader = new AudioLoader().setPath(this.assetsPath);
         audioLoader.load(`${name}.mp3`, buffer => {
             sound.setBuffer(buffer);
@@ -47,7 +51,7 @@ class SFX {
     }
     
     play(name) {
-        if (name !== SoundsEnum.SHOOT) {
+        if (name !== SoundsEnum.SHOOT && name !== SoundsEnum.EXPLOSION) {
 
             const sound = this.sounds[name];
 
@@ -58,7 +62,7 @@ class SFX {
         } else {
 
             for(let i = 1; i <= 10; i++) {
-                const sound = this.sounds[SoundsEnum.SHOOT + "_" + i];
+                const sound = this.sounds[name + "_" + i];
 
                 if (sound !== undefined && !sound.isPlaying) {
                     sound.play();                    
